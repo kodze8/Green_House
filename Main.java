@@ -3,13 +3,17 @@ import org.json.JSONObject;
 import appliance.*;
 import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args){
-        List<String> applianceNames = new ArrayList<>();
-        applianceNames = DatabaseService.getApplianceList();
-        System.out.print(applianceNames);
+
+        //GET APPLIANCE MAP(APPLIANCE TYPE, NAME)
+        Map<ApplianceType, List<String>> applianceMap = new HashMap<>();
+        applianceMap = DatabaseService.getApplianceList();
+        System.out.print(applianceMap);
 
         String name =  "Nest Cam IQ Security Camera";
         JSONObject test;
@@ -18,6 +22,8 @@ public class Main {
         System.out.print(test);
         System.out.print("\n");
 
+
+        // ADD APPLIANCE
         name = "Test Appliance";
         ApplianceType type = appliance.ApplianceType.valueOf("ROUTER");
         float powerConsumption = 1.9f;
@@ -30,6 +36,8 @@ public class Main {
         else {
             System.out.print("appliance already in db\n");
         }
+
+        //DELETE APPLIANCE
         name = "asdasfasd";
         if (DatabaseService.deleteAppliance(name)) {
             System.out.print("appliance deleted successfully\n");
@@ -38,6 +46,18 @@ public class Main {
             System.out.print("appliance not found\n");
         }
 
+
+        //UPDATE DB
+        name = "Test Appliance";
+        type = appliance.ApplianceType.valueOf("BLENDER");
+        powerConsumption = 2.9f;
+        embodiedEmissions = 20;
+        if(DatabaseService.updateAppliance(name, type, powerConsumption, embodiedEmissions)){
+            System.out.print("appliance updated successfully\n");
+        }
+        else {
+            System.out.print("appliance not found\n");
+        }
 
     }
 }

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import appliance.*;
 import com.google.gson.JsonSyntaxException;
+import java.util.Map;
+import java.util.HashMap;
 
 
 public class DatabaseService {
@@ -61,22 +63,25 @@ public class DatabaseService {
         return null;
     }
 
-    // filter on appliance type
-    static List<String> getApplianceList() {
-        List<String> applianceNames = new ArrayList<>();
+    static Map<appliance.ApplianceType,List<String>> getApplianceList() {
+        Map<ApplianceType, List<String>> applianceMap = new HashMap<>();
+
         JSONArray jsonArray = readDB();
         if (jsonArray == null) {
             return null;
         }
 
-        else {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject appliance = jsonArray.getJSONObject(i);
-                applianceNames.add(appliance.getString("name"));
-            }
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject appliance = jsonArray.getJSONObject(i);
+            String name = appliance.getString("name");
+            ApplianceType type = ApplianceType.valueOf(appliance.getString("type"));
+
+            applianceMap.putIfAbsent(type, new ArrayList<>());
+            applianceMap.get(type).add(name);
         }
 
-        return applianceNames;
+        return applianceMap;
     }
 
     static boolean addAppliance(String name, ApplianceType type, float powerConsumption, int embodiedEmissions) {
@@ -86,10 +91,10 @@ public class DatabaseService {
         }
         else {
             JSONObject newApplianceJson = new JSONObject();
-            if(retrieveAppliance(name) != null){
+            if (retrieveAppliance(name) != null) {
                 return false;
             }
-            else{
+            else {
                 newApplianceJson.put("name", name);
                 newApplianceJson.put("type", type);
                 newApplianceJson.put("power_consumption_kwh", powerConsumption);
@@ -101,8 +106,31 @@ public class DatabaseService {
         }
     }
 
-    static boolean updateAppliance() {
-        return true;
+    static boolean updateAppliance(String name, ApplianceType type, float powerConsumption, int embodiedEmissions ) {
+        JSONArray jsonArray = readDB();
+        if (jsonArray == null) {
+            return false;
+        }
+
+        boolean applianceFound = false;
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject appliance = jsonArray.getJSONObject(i);
+
+            if (appliance.getString("name").equals(name)) {
+                appliance.put("type", type.toString());
+                appliance.put("power_consumption_kwh", powerConsumption);
+                appliance.put("embodied_emissions_kgCO2e", embodiedEmissions);
+                applianceFound = true;
+                break;
+            }
+        }
+
+        if (applianceFound) {
+            return writeDB(jsonArray);
+        }
+        else {
+            return false;
+        }
     }
 
     static boolean deleteAppliance(String name) {

@@ -574,11 +574,5 @@
         "power_consumption_kwh": 0.15,
         "embodied_emissions_kgCO2e": 120,
         "type": "COMPUTER"
-    },
-    {
-        "name": "Test Appliance",
-        "power_consumption_kwh": 1.9,
-        "embodied_emissions_kgCO2e": 30,
-        "type": "ROUTER"
     }
 ]
