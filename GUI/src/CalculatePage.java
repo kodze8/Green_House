@@ -1,6 +1,8 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
 public class SwingFrame {
     List<AppliancePanel> appliancePanels;
     JFrame frame;
+//    JFrame homeFrame;
 
     JPanel bodyPanel;
     JPanel buttonPanel;
@@ -19,6 +22,7 @@ public class SwingFrame {
 
 
     public SwingFrame() {
+//        this.homeFrame = home;
         this.appliancePanels = new ArrayList<>();
         this.frame = new JFrame("Scrollable Panels");
         this.frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -29,11 +33,11 @@ public class SwingFrame {
 
         this.bodyPanel = new JPanel();
         this.bodyPanel.setLayout(new BoxLayout(this.bodyPanel, BoxLayout.Y_AXIS));
-        this.bodyPanel.setBackground(Color.PINK);
+//        this.bodyPanel.setBackground(Color.PINK);
 
         this.buttonPanel = new JPanel();
         this.buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        this.buttonPanel.setBackground(Color.YELLOW);
+//        this.buttonPanel.setBackground(Color.YELLOW);
         this.frame.add(this.buttonPanel, BorderLayout.SOUTH);
 
         createScroll();
@@ -54,7 +58,7 @@ public class SwingFrame {
     }
     public void addPanel() {
         JPanel panelWrapper = new JPanel();
-        panelWrapper.setBackground(Color.gray);
+//        panelWrapper.setBackground(Color.gray);
         panelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
         panelWrapper.setMaximumSize(new Dimension(FRAME_WIDTH, PANEL_HEIGHT));
 
@@ -97,25 +101,36 @@ public class SwingFrame {
         bodyPanel.revalidate();
         bodyPanel.repaint();
     }
-    private void createHeader(){
+    public void createHeader(){
         // header
         JPanel headPanel  = new JPanel();
         this.frame.add(headPanel, BorderLayout.NORTH);
         headPanel.setPreferredSize(new Dimension(frame.getWidth(), 40));
-        headPanel.setBackground(Color.BLUE);
+//        headPanel.setBackground(Color.BLUE);
         headPanel.setLayout(new BorderLayout());
 
         JButton leftButton = new JButton("Menu");
+        leftButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                closeFrame();
+                new HomePage();
+            }
+        });
         headPanel.add(leftButton, BorderLayout.WEST);
 
         JLabel title = new JLabel("HouseHold", SwingConstants.CENTER);
-        title.setForeground(Color.WHITE);
+//        title.setForeground(Color.WHITE);
         title.setFont(new Font("Arial", Font.BOLD, 16));
         title.setBorder(BorderFactory.createEmptyBorder(0, -80, 0, 0));
         headPanel.add(title, BorderLayout.CENTER);
 
         frame.add(headPanel, BorderLayout.NORTH);
         frame.setVisible(true);
+    }
+
+    private void closeFrame(){
+        frame.dispose();
     }
     private void createScroll(){
         this.scrollPane = new JScrollPane(this.bodyPanel);
@@ -182,9 +197,9 @@ public class SwingFrame {
     }
 
 
-    public static void main(String[] args) {
-        new SwingFrame();
-    }
+//    public static void main(String[] args) {
+//        new SwingFrame();
+//    }
 }
 
 
