@@ -1,17 +1,12 @@
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SwingFrame {
+public class CalculatePage {
     List<AppliancePanel> appliancePanels;
     JFrame frame;
-//    JFrame homeFrame;
-
     JPanel bodyPanel;
     JPanel buttonPanel;
     JScrollPane scrollPane;
@@ -21,10 +16,10 @@ public class SwingFrame {
     static final int PANEL_DISTANCE = 10;
 
 
-    public SwingFrame() {
+    public CalculatePage() {
 //        this.homeFrame = home;
         this.appliancePanels = new ArrayList<>();
-        this.frame = new JFrame("Scrollable Panels");
+        this.frame = new JFrame("Calculate Carbon Footprint");
         this.frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setLayout(new BorderLayout());
@@ -110,12 +105,9 @@ public class SwingFrame {
         headPanel.setLayout(new BorderLayout());
 
         JButton leftButton = new JButton("Menu");
-        leftButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                closeFrame();
-                new HomePage();
-            }
+        leftButton.addActionListener(e -> {
+            closeFrame();
+            new HomePage();
         });
         headPanel.add(leftButton, BorderLayout.WEST);
 
@@ -198,7 +190,7 @@ public class SwingFrame {
 
 
 //    public static void main(String[] args) {
-//        new SwingFrame();
+//        new CalculatePage();
 //    }
 }
 
