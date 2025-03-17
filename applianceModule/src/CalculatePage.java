@@ -10,7 +10,7 @@ public class CalculatePage {
     private JPanel bodyPanel;
     private JPanel buttonPanel;
     private JScrollPane scrollPane;
-    private static final int FRAME_WIDTH = 700;
+    private static final int FRAME_WIDTH = 1000;
     private static final int FRAME_HEIGHT = 600;
     private static final int PANEL_HEIGHT = 50;
     private static final int PANEL_DISTANCE = 10;
@@ -94,7 +94,8 @@ public class CalculatePage {
         JButton leftButton = new JButton("Menu");
         leftButton.addActionListener(e -> {
             closeFrame();
-            new HomePage();
+            // TODO
+            //  new HomePage();
         });
         headPanel.add(leftButton, BorderLayout.WEST);
         JLabel title = new JLabel("HouseHold", SwingConstants.CENTER);

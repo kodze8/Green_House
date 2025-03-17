@@ -15,7 +15,6 @@ public class HomePage {
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.Y_AXIS));
         buttonContainer.setPreferredSize(new Dimension(200, 100));
-//        buttonContainer.setBackground(Color.GRAY);
 
         JButton goToDB = new JButton("Update DataBase");
         JButton goToCalculate = new JButton("Calculate Carbon Footprint");

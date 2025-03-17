@@ -4,10 +4,9 @@ import java.awt.event.ActionListener;
 
 public class AppliancePanel {
     JPanel panel;
-
     String[] options = {"Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6", "Option 7"};
-    JComboBox<String> nameBox;
     JComboBox<String> typeBox;
+    JComboBox<String> nameBox;
     JComboBox<String> roomBox;
     JTextField startTimeBox;
     JTextField endTimeBox;
@@ -39,7 +38,6 @@ public class AppliancePanel {
 
 
     public void cleanup() {
-        // remove all action listeners to prevent memory leaks
         for (ActionListener al : deleteButton.getActionListeners()) {
             deleteButton.removeActionListener(al);
         }

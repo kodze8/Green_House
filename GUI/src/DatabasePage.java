@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 public class DatabasePage {
     JFrame frame;
 
-
     public DatabasePage(){
         this.frame = new JFrame("Update Appliance Database");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,12 +19,9 @@ public class DatabasePage {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 new HomePage();
-
             }
         });
         this.frame.add(menu, BorderLayout.NORTH);
-
-
         frame.setVisible(true);
     }
 }
