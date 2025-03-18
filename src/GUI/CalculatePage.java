@@ -1,3 +1,5 @@
+package GUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ public class CalculatePage {
     private JPanel bodyPanel;
     private JPanel buttonPanel;
     private JScrollPane scrollPane;
-    private static final int FRAME_WIDTH = 700;
+    private static final int FRAME_WIDTH = 1000;
     private static final int FRAME_HEIGHT = 600;
     private static final int PANEL_HEIGHT = 50;
     private static final int PANEL_DISTANCE = 10;
@@ -131,8 +133,6 @@ public class CalculatePage {
         JButton statisticsButton = new JButton("Show Statistics");
         statisticsButton.addActionListener(e -> openNewFrame());
         this.buttonPanel.add(statisticsButton);
-        // statistics service object will be initialized
-        // input info will be passed in the constric
     }
     private void createRecommendationsButton() {
 //        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

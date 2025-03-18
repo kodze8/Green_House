@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GUI/GUI.iml" filepath="$PROJECT_DIR$/GUI/GUI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Runner/Runner.iml" filepath="$PROJECT_DIR$/Runner/Runner.iml" />
       <module fileurl="file://$PROJECT_DIR$/applianceModule/applianceModule.iml" filepath="$PROJECT_DIR$/applianceModule/applianceModule.iml" />
       <module fileurl="file://$PROJECT_DIR$/greenHouse.iml" filepath="$PROJECT_DIR$/greenHouse.iml" />
     </modules>

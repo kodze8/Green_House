@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="greenHouse" target="1.5" />
+      <module name="greenHouse" target="20" />
     </bytecodeTargetLevel>
   </component>
 </project>

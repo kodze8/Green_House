@@ -14,7 +14,6 @@ import com.google.gson.JsonSyntaxException;
 import java.util.Map;
 import java.util.HashMap;
 
-
 public class DatabaseService {
 
     static boolean ValidateInput() {

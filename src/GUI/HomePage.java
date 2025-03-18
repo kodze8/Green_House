@@ -1,5 +1,8 @@
+package GUI;
+
 import javax.swing.*;
 import java.awt.*;
+
 public class HomePage {
     private JFrame frame;
     public HomePage(){
