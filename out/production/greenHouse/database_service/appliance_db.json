@@ -577,8 +577,8 @@
     },
     {
         "name": "Test Appliance",
-        "power_consumption_kwh": 3,
-        "embodied_emissions_kgCO2e": 20,
+        "power_consumption_kwh": 2,
+        "embodied_emissions_kgCO2e": 30,
         "type": "BLENDER"
     }
 ]

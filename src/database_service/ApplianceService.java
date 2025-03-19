@@ -63,8 +63,13 @@ public class ApplianceService {
         newApplianceJson.put(DatabaseService.DataBaseType.POWER_CONSUMPTION, powerConsumption);
         newApplianceJson.put(DatabaseService.DataBaseType.EMBODIED_EMISSION, embodiedEmissions);
 
-        jsonArray.put(newApplianceJson);
-        return DatabaseService.writeDB(jsonArray);
+        if(DatabaseService.validateInput(newApplianceJson)) {
+            jsonArray.put(newApplianceJson);
+            return DatabaseService.writeDB(jsonArray);
+        }
+        else {
+            return false;
+        }
     }
 
     public static boolean updateAppliance(String name, ApplianceType type, float powerConsumption, int embodiedEmissions) {

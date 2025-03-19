@@ -1,5 +1,6 @@
 package database_service;
 
+import appliance.ApplianceType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -7,6 +8,8 @@ import org.json.JSONTokener;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DatabaseService {
@@ -20,9 +23,74 @@ public class DatabaseService {
         final static String EMBODIED_EMISSION = "embodied_emissions_kgCO2e";
     }
 
-    static boolean ValidateInput() {
+    static boolean validateInput(JSONObject appliance) {
+        return (!invalidName(appliance) && !invalidType(appliance) && !invalidEmissions(appliance) && !invalidPowerConsumption(appliance));
+    }
+
+    private static boolean invalidName(JSONObject appliance) {
+        return (!appliance.has("name") || !(appliance.get("name") instanceof String) || appliance.getString("name").trim().isEmpty());
+    }
+    private static boolean invalidPowerConsumption(JSONObject appliance) {
+        return (!appliance.has("power_consumption_kwh") || !(appliance.get("power_consumption_kwh") instanceof Number) || appliance.getDouble("power_consumption_kwh") <= 0);
+    }
+    private static boolean invalidEmissions(JSONObject appliance) {
+        return (!appliance.has("embodied_emissions_kgCO2e") || !(appliance.get("embodied_emissions_kgCO2e") instanceof Number) || appliance.getInt("embodied_emissions_kgCO2e") < 0);
+    }
+    private static boolean invalidType(JSONObject appliance) {
+        return (!appliance.has("type") || isValidApplianceType(appliance.getString("type")));
+    }
+    private static boolean isValidApplianceType(String type) {
+        try {
+            ApplianceType.valueOf(type);
+            return false;
+        }
+        catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    private static void printInvalidEntries(List<Integer> invalidIndexes) {
+        JSONArray jsonArray = readDB();
+        for (Integer invalidIndex : invalidIndexes) {
+            System.out.print("invalid entry at index: " + invalidIndex + "\n" + jsonArray.get(invalidIndex) + "\n");
+        }
+    }
+
+    static boolean validateDatabase() {
+        JSONArray jsonArray = readDB();
+        List<Integer> invalidIndexes = new ArrayList<>();
+
+        if (jsonArray == null) {
+            return false;
+        }
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject appliance = jsonArray.getJSONObject(i);
+
+            if (invalidName(appliance)) {
+                invalidIndexes.add(i);
+            }
+
+            else if (invalidPowerConsumption(appliance)) {
+                invalidIndexes.add(i);
+            }
+
+            else if (invalidEmissions(appliance)) {
+                invalidIndexes.add(i);
+            }
+
+            else if (invalidType(appliance)) {
+                invalidIndexes.add(i);
+            }
+        }
+        if(!invalidIndexes.isEmpty()){
+            printInvalidEntries(invalidIndexes);
+            return false;
+        }
+
         return true;
     }
+
 
     static JSONArray readDB(){
         try {
@@ -58,8 +126,10 @@ public class DatabaseService {
         else {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject appliance = jsonArray.getJSONObject(i);
-                if (appliance.getString(DataBaseType.NAME).equals(name)) {
-                    return appliance; // Return the matching appliance
+                if (!invalidName(appliance)) {
+                    if (appliance.getString(DataBaseType.NAME).equals(name)) {
+                        return appliance; // Return the matching appliance
+                    }
                 }
             }
         }
