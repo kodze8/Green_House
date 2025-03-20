@@ -1,7 +1,11 @@
 package GUI;
 
+import database_service.DatabaseService;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomePage {
     private JFrame frame;
@@ -26,7 +30,21 @@ public class HomePage {
         buttonContainer.add(goToCalculate);
 
         goToCalculate.addActionListener(e->{frame.dispose();new CalculatePage();});
-        goToDB.addActionListener(e->{frame.dispose();new DatabasePage();});
+        goToDB.addActionListener(e -> {
+            List<String> invalidEntries = DatabaseService.validateDatabase();
+            //show popup with invalid entries if they exist
+            if (!invalidEntries.isEmpty()) {
+                StringBuilder message = new StringBuilder("The following entries are invalid:\n");
+
+                for (String entry : invalidEntries) {
+                    message.append(entry).append("\n");
+                }
+                JOptionPane.showMessageDialog(frame, message.toString(), "Invalid Database Entries", JOptionPane.ERROR_MESSAGE);
+            }
+
+            frame.dispose();
+            new DatabasePage();
+        });
 
         wrapperPanel.add(buttonContainer);
         frame.add(wrapperPanel, BorderLayout.CENTER);
