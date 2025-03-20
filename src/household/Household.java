@@ -28,6 +28,9 @@ public class Household {
             appliances.add(applianceUsage);
         }
     }
+    public List<ApplianceUsage> getAppliances() {
+        return this.appliances;
+    }
 
     public void setCountry(Country newCountry){
         this.country = newCountry;

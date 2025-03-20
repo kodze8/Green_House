@@ -5,8 +5,10 @@ import carbon_intensity.Country;
 import database_service.ApplianceService;
 import room.Room;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.OptionalDouble;
 
 
 public class ApplianceUsage {
@@ -68,13 +70,24 @@ public class ApplianceUsage {
         return alwaysOn;
     }
 
+
+    /*
+    this.carbonFootprint = (int) (this.appliance.getEmbodiedEmissions()+
+                (this.appliance.getPowerConsumption() * this.getTimeRange()) *
+                        this.carbonIntensity.stream().mapToInt(k->k).sum());
+     */
     private void calculateCarbonFootPrint(){
         //TODO
         // Is carbon intensity calculated correctly?
         this.carbonFootprint = (int) (this.appliance.getEmbodiedEmissions()+
-                        this.appliance.getPowerConsumption() * this.getTimeRange()+
-                        this.carbonIntensity.stream().mapToInt(k->k).sum());
+                (this.appliance.getPowerConsumption() * this.getTimeRange()) *
+                        ((float) this.carbonIntensity.stream().mapToInt(k -> k).sum() / this.getTimeRange())
+        ) ;
     }
+    public static OptionalDouble calculateAverage(int[] numbers) {
+        return Arrays.stream(numbers).average();
+    }
+    // EM + ((PC * TR) * CI)
 
     public int getCarbonFootprint(){
         calculateCarbonFootPrint();
