@@ -1,8 +1,12 @@
 package GUI;
 
+import appliance.Appliance;
+import appliance.ApplianceUsage;
 import carbon_intensity.Country;
+import controllers.HouseholdController;
 import energy_label.EnergyLabel;
 import gui_parser.ApplianceParser;
+import household.Household;
 
 import javax.swing.*;
 import java.awt.*;
@@ -167,7 +171,32 @@ public class CalculatePage {
         calculateButton.addActionListener(e -> {
             // see parser class
             ApplianceParser parser = new ApplianceParser(this.appliancePanels, this.countryBox, this.energyLabelBox);
-            openNewFrame();
+            System.out.print(this.appliancePanels.get(0).endTimeBox.getSelectedItem());
+
+            if (!parser.validate(this.appliancePanels, this.countryBox, this.energyLabelBox)) {
+                JOptionPane.showMessageDialog(frame, "Validation failed\nPlease fill out all the required boxes", "Failed", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else {
+                Household household;
+                household = HouseholdController.initiateHousehold(countryBox, energyLabelBox, HouseholdController.parseAppliances(this.appliancePanels, this.countryBox));
+
+                System.out.print(household.getEnergyLabel() + "\n");
+                List<ApplianceUsage> test = household.getAppliances();
+                ApplianceUsage test2 = test.get(0);
+                System.out.print(household.getAppliances() + "\n");
+                System.out.print(test2.getTimeRange() + "\n");
+                System.out.print(test2.getAppliance() + "\n");
+                System.out.print(test2.getUsageMode() + "\n");
+                System.out.print(test2.getCarbonFootprint() + "\n");
+                //System.out.print(test2.getPowerConsumption() + "\n");
+
+
+
+
+                openNewFrame();
+            }
+
+
         });
         this.buttonPanel.add(calculateButton);
     }
@@ -211,6 +240,7 @@ public class CalculatePage {
     }
     public static void main(String[] args) {
         new CalculatePage();
+
     }
 }
 

@@ -35,12 +35,12 @@ public class AppliancePanel {
         }
     }
 
-    JComboBox<String> typeBox;
-    JComboBox<String> nameBox;
-    JComboBox<String> roomBox;
-    JComboBox<String> startTimeBox;
-    JComboBox<String> endTimeBox;
-    JCheckBox alwaysOn;
+    public JComboBox<String> typeBox;
+    public JComboBox<String> nameBox;
+    public JComboBox<String> roomBox;
+    public JComboBox<String> startTimeBox;
+    public JComboBox<String> endTimeBox;
+    public JCheckBox alwaysOn;
     JButton deleteButton;
 
     public AppliancePanel() {
