@@ -576,9 +576,9 @@
         "type": "COMPUTER"
     },
     {
-        "name": "Test Appliance",
-        "power_consumption_kwh": 3,
-        "embodied_emissions_kgCO2e": 20,
-        "type": "BLENDER"
+        "name": "test",
+        "power_consumption_kwh": 10,
+        "embodied_emissions_kgCO2e": 30,
+        "type": "DISHWASHER"
     }
 ]

@@ -49,46 +49,33 @@ public class DatabaseService {
         }
     }
 
-    private static void printInvalidEntries(List<Integer> invalidIndexes) {
-        JSONArray jsonArray = readDB();
-        for (Integer invalidIndex : invalidIndexes) {
-            System.out.print("invalid entry at index: " + invalidIndex + "\n" + jsonArray.get(invalidIndex) + "\n");
-        }
-    }
 
-    static boolean validateDatabase() {
+    public static List<String> validateDatabase() {
         JSONArray jsonArray = readDB();
-        List<Integer> invalidIndexes = new ArrayList<>();
+        List<String> invalidEntries = new ArrayList<>();
 
         if (jsonArray == null) {
-            return false;
+            return invalidEntries;
         }
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject appliance = jsonArray.getJSONObject(i);
 
             if (invalidName(appliance)) {
-                invalidIndexes.add(i);
+                invalidEntries.add("Invalid name at index: " + i + " - " + appliance);
             }
-
             else if (invalidPowerConsumption(appliance)) {
-                invalidIndexes.add(i);
+                invalidEntries.add("Invalid power consumption at index: " + i + " - " + appliance);
             }
-
             else if (invalidEmissions(appliance)) {
-                invalidIndexes.add(i);
+                invalidEntries.add("Invalid emissions at index: " + i + " - " + appliance);
             }
-
             else if (invalidType(appliance)) {
-                invalidIndexes.add(i);
+                invalidEntries.add("Invalid type at index: " + i + " - " + appliance);
             }
         }
-        if(!invalidIndexes.isEmpty()){
-            printInvalidEntries(invalidIndexes);
-            return false;
-        }
 
-        return true;
+        return invalidEntries;
     }
 
 
