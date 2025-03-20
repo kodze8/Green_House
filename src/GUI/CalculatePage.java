@@ -1,32 +1,40 @@
 package GUI;
 
+import carbon_intensity.Country;
+import energy_label.EnergyLabel;
+import gui_parser.ApplianceParser;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CalculatePage {
-    private List<AppliancePanel> appliancePanels;
+
     private JFrame frame;
     private JPanel bodyPanel;
     private JPanel buttonPanel;
     private JScrollPane scrollPane;
-    private static final int FRAME_WIDTH = 1000;
-    private static final int FRAME_HEIGHT = 600;
+    private List<AppliancePanel> appliancePanels;
+    protected JComboBox countryBox;
+    protected JComboBox energyLabelBox;
+
+    private static final int FRAME_WIDTH = 1100;
+    private static final int FRAME_HEIGHT = 700;
     private static final int PANEL_HEIGHT = 50;
     private static final int PANEL_DISTANCE = 10;
 
+    private static final String[] energyLabelOptions = EnergyLabel.getAllEnumCaptions().toArray(new String[0]);
+    private static final String[] countryOptions = Country.getAllEnumCaptions().toArray(new String[0]);
 
     public CalculatePage() {
         this.appliancePanels = new ArrayList<>();
         this.frame = createFrame();
         this.bodyPanel = new JPanel();
         this.bodyPanel.setLayout(new BoxLayout(this.bodyPanel, BoxLayout.Y_AXIS));
-//        this.bodyPanel.setBackground(Color.PINK);
         this.buttonPanel = new JPanel();
-        this.buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-//        this.buttonPanel.setBackground(Color.YELLOW);
+        this.buttonPanel.setPreferredSize(new Dimension(frame.getWidth(), 80));
+        this.buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         this.frame.add(this.buttonPanel, BorderLayout.SOUTH);
 
         createHeader();
@@ -36,6 +44,7 @@ public class CalculatePage {
 
         this.frame.setVisible(true);
     }
+
     private JFrame createFrame() {
         JFrame newFrame = new JFrame("Calculate Carbon Footprint");
         newFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -43,27 +52,32 @@ public class CalculatePage {
         newFrame.setLayout(new BorderLayout());
         return newFrame;
     }
+
     private void createActionButtons() {
         createCalculateButton();
         createStatisticsButton();
         createRecommendationsButton();
-        createSaveButton();
-        createRestoreButton();
+        /** Those two features are no more implemented.
+         *  createSaveButton();
+         *  createRestoreButton();
+         */
     }
+
     public void addPanel() {
         JPanel panelWrapper = new JPanel();
         panelWrapper.setLayout(new FlowLayout(FlowLayout.LEFT));
         panelWrapper.setMaximumSize(new Dimension(FRAME_WIDTH, PANEL_HEIGHT));
-        AppliancePanel appliacePanel = new AppliancePanel();
-        appliacePanel.deleteButton.addActionListener(e -> removePanel(appliacePanel, panelWrapper));
-        panelWrapper.add(appliacePanel.panel);
-        this.appliancePanels.add(appliacePanel);
+        AppliancePanel appliancePanel = new AppliancePanel();
+        appliancePanel.deleteButton.addActionListener(e -> removePanel(appliancePanel, panelWrapper));
+        panelWrapper.add(appliancePanel.panel);
+        this.appliancePanels.add(appliancePanel);
         bodyPanel.add(panelWrapper, bodyPanel.getComponentCount() - 1);
         bodyPanel.add(Box.createVerticalStrut(PANEL_DISTANCE), bodyPanel.getComponentCount() - 1);
         bodyPanel.revalidate();
         bodyPanel.repaint();
     }
-    public void removePanel(AppliancePanel appliacePanel, JPanel panelWrapper) {
+
+    private void removePanel(AppliancePanel appliacePanel, JPanel panelWrapper) {
         int index = -1;
         for (int i = 0; i < bodyPanel.getComponentCount(); i++) {
             if (bodyPanel.getComponent(i) == panelWrapper) {
@@ -87,34 +101,57 @@ public class CalculatePage {
         bodyPanel.revalidate();
         bodyPanel.repaint();
     }
-    public void createHeader(){
-        JPanel headPanel  = new JPanel();
+
+    private void createHeader() {
+        JPanel headPanel = new JPanel();
         this.frame.add(headPanel, BorderLayout.NORTH);
-        headPanel.setPreferredSize(new Dimension(frame.getWidth(), 40));
-        headPanel.setLayout(new BorderLayout());
+        headPanel.setPreferredSize(new Dimension(frame.getWidth(), 80)); // Increased height
+        headPanel.setLayout(new BoxLayout(headPanel, BoxLayout.Y_AXIS));
+
+        JPanel upperHeadPanel = new JPanel(new BorderLayout());
 
         JButton leftButton = new JButton("Menu");
         leftButton.addActionListener(e -> {
             closeFrame();
             new HomePage();
         });
-        headPanel.add(leftButton, BorderLayout.WEST);
+        upperHeadPanel.add(leftButton, BorderLayout.WEST);
+
         JLabel title = new JLabel("HouseHold", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 16));
         title.setBorder(BorderFactory.createEmptyBorder(0, -80, 0, 0));
-        headPanel.add(title, BorderLayout.CENTER);
+        upperHeadPanel.add(title, BorderLayout.CENTER);
+
+        // Lower Head Panel (Inputs)
+        JPanel lowerHeadPanel = new JPanel();
+        this.countryBox = new JComboBox(countryOptions);
+        this.energyLabelBox = new JComboBox(energyLabelOptions);
+
+        PanelStatics.addPlaceholder(this.countryBox, "Select a country...");
+        PanelStatics.addPlaceholder(this.energyLabelBox, "Select Energy Label...");
+
+        lowerHeadPanel.add(countryBox);
+        lowerHeadPanel.add(energyLabelBox);
+
+        // Add both panels to headPanel
+        headPanel.add(upperHeadPanel);
+        headPanel.add(lowerHeadPanel);
+
         frame.add(headPanel, BorderLayout.NORTH);
         frame.setVisible(true);
     }
-    private void closeFrame(){
+
+    private void closeFrame() {
         frame.dispose();
     }
-    private void createScroll(){
+
+    private void createScroll() {
         this.scrollPane = new JScrollPane(this.bodyPanel);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         this.frame.add(scrollPane, BorderLayout.CENTER);
     }
+
     private void createAddApplianceButton() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addApplianceButton = new JButton("Add Appliance");
@@ -124,9 +161,14 @@ public class CalculatePage {
         this.bodyPanel.add(Box.createVerticalStrut(20));
         this.bodyPanel.add(buttonPanel);
     }
+
     private void createCalculateButton() {
         JButton calculateButton = new JButton("Calculate Carbon Footprint");
-        calculateButton.addActionListener(e -> openNewFrame());
+        calculateButton.addActionListener(e -> {
+            // see parser class
+            ApplianceParser parser = new ApplianceParser(this.appliancePanels, this.countryBox, this.energyLabelBox);
+            openNewFrame();
+        });
         this.buttonPanel.add(calculateButton);
     }
     private void createStatisticsButton() {
@@ -134,22 +176,25 @@ public class CalculatePage {
         statisticsButton.addActionListener(e -> openNewFrame());
         this.buttonPanel.add(statisticsButton);
     }
+
     private void createRecommendationsButton() {
-//        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        //        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton recommendationButton = new JButton("Give me Recommendations");
         recommendationButton.addActionListener(e -> openNewFrame());
         this.buttonPanel.add(recommendationButton);
     }
-    private void createSaveButton() {
-//        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton saveButton = new JButton("Save Configuration");
-        this.buttonPanel.add(saveButton);
-    }
-    private void createRestoreButton() {
-//        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton saveButton = new JButton("Restore Saved Configuration");
-        this.buttonPanel.add(saveButton);
-    }
+
+    /** Those two features are no more implemented
+     *
+     * private void createSaveButton() {
+     *     JButton saveButton = new JButton("Save Configuration");
+     *     this.buttonPanel.add(saveButton);
+     * }
+     * private void createRestoreButton() {
+     *     JButton saveButton = new JButton("Restore Saved Configuration");
+     *     this.buttonPanel.add(saveButton);
+     * }
+     */
     private void openNewFrame() {
         JFrame newFrame = new JFrame("New Frame");
         newFrame.setSize(300, 200);
@@ -168,11 +213,4 @@ public class CalculatePage {
         new CalculatePage();
     }
 }
-
-
-
-
-
-
-
 
