@@ -98,6 +98,8 @@ public class AppliancePanel {
                 this.startTimeBox.setEnabled(false);
                 this.endTimeBox.setEnabled(false);
             } else {
+                this.startTimeBox.setSelectedIndex(0);
+                this.endTimeBox.setSelectedIndex(0);
                 this.startTimeBox.setEnabled(true);
                 this.endTimeBox.setEnabled(true);
             }

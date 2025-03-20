@@ -60,4 +60,11 @@ public class Household {
         sortedList.sort(comparator);
         return sortedList;
     }
+
+    public int calculateTotalCarbonFootprint() {
+        return this.getAppliances()
+                .stream()
+                .mapToInt(ApplianceUsage::getCarbonFootprint)
+                .sum();
+    }
 }

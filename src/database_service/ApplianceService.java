@@ -19,7 +19,7 @@ public class ApplianceService {
         if (object != null) {
             String applianceName = object.getString(DatabaseService.DataBaseType.NAME);
             ApplianceType applianceType = ApplianceType.getEnumByCaption(object.getString(DatabaseService.DataBaseType.TYPE));
-            float appliancePC = object.getFloat(DatabaseService.DataBaseType.POWER_CONSUMPTION);
+            float appliancePC = (float)object.getDouble(DatabaseService.DataBaseType.POWER_CONSUMPTION);
             int embodiedEmissions = object.getInt(DatabaseService.DataBaseType.EMBODIED_EMISSION);
 
             return new Appliance(applianceName, applianceType, appliancePC, embodiedEmissions);

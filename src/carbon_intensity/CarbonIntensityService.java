@@ -28,7 +28,7 @@ public class CarbonIntensityService {
         loadJsonData().ifPresent(data -> {
             JSONObject countryData = data.optJSONObject(country);
             if (countryData != null) {
-                for (int i = startTime; i < endTime; i++) {
+                for (int i = startTime; i <= endTime; i++) {
                     carbonIntensityValues.add(countryData.optInt(String.valueOf(i), -1)); // Default -1 if missing
                 }
             }

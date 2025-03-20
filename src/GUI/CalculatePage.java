@@ -20,6 +20,7 @@ public class CalculatePage {
     private JPanel buttonPanel;
     private JScrollPane scrollPane;
     private List<AppliancePanel> appliancePanels;
+    private JLabel carbonFootprintLabel;
     protected JComboBox countryBox;
     protected JComboBox energyLabelBox;
 
@@ -171,35 +172,23 @@ public class CalculatePage {
         calculateButton.addActionListener(e -> {
             // see parser class
             ApplianceParser parser = new ApplianceParser(this.appliancePanels, this.countryBox, this.energyLabelBox);
-            System.out.print(this.appliancePanels.get(0).endTimeBox.getSelectedItem());
 
             if (!parser.validate(this.appliancePanels, this.countryBox, this.energyLabelBox)) {
-                JOptionPane.showMessageDialog(frame, "Validation failed\nPlease fill out all the required boxes", "Failed", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Validation failed\nPlease fill out all the required boxes", "Error", JOptionPane.ERROR_MESSAGE);
             }
             else {
                 Household household;
                 household = HouseholdController.initiateHousehold(countryBox, energyLabelBox, HouseholdController.parseAppliances(this.appliancePanels, this.countryBox));
+                int carbonFootprint = household.calculateTotalCarbonFootprint();
+                JOptionPane.showMessageDialog(frame, "Your daily carbon footprint is: " + carbonFootprint + " kg CO₂", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-                System.out.print(household.getEnergyLabel() + "\n");
-                List<ApplianceUsage> test = household.getAppliances();
-                ApplianceUsage test2 = test.get(0);
-                System.out.print(household.getAppliances() + "\n");
-                System.out.print(test2.getTimeRange() + "\n");
-                System.out.print(test2.getAppliance() + "\n");
-                System.out.print(test2.getUsageMode() + "\n");
-                System.out.print(test2.getCarbonFootprint() + "\n");
-                //System.out.print(test2.getPowerConsumption() + "\n");
-
-
-
-
-                openNewFrame();
             }
 
 
         });
         this.buttonPanel.add(calculateButton);
     }
+//    openNewFrame();
     private void createStatisticsButton() {
         JButton statisticsButton = new JButton("Show Statistics");
         statisticsButton.addActionListener(e -> openNewFrame());

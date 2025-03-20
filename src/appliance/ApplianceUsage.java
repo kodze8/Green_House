@@ -19,7 +19,7 @@ public class ApplianceUsage {
     private Room room;
     private int carbonFootprint;
     private boolean alwaysOn;
-
+    private static final double GRAMS_TO_KG_CONVERSION_FACTOR = 1000.0;
 
     public ApplianceUsage(String name, Room room, Country country, boolean alwaysOn, int start, int end) {
         this.appliance = ApplianceService.retrieveAppliance(name);
@@ -48,7 +48,7 @@ public class ApplianceUsage {
     public void setTimes(boolean alwaysOn, int startTime, int endTime){
         if(alwaysOn){
             this.startTime = 0;
-            this.endTime = 24;
+            this.endTime = 23;
             this.alwaysOn = true;
         }
         else{
@@ -64,7 +64,7 @@ public class ApplianceUsage {
         return this.endTime;
     }
     public int getTimeRange(){
-        return this.endTime-this.startTime;
+        return this.endTime-this.startTime+1;
     }
     public boolean getUsageMode(){
         return alwaysOn;
@@ -76,17 +76,21 @@ public class ApplianceUsage {
                 (this.appliance.getPowerConsumption() * this.getTimeRange()) *
                         this.carbonIntensity.stream().mapToInt(k->k).sum());
      */
-    private void calculateCarbonFootPrint(){
-        //TODO
-        // Is carbon intensity calculated correctly?
-        this.carbonFootprint = (int) (this.appliance.getEmbodiedEmissions()+
-                (this.appliance.getPowerConsumption() * this.getTimeRange()) *
-                        ((float) this.carbonIntensity.stream().mapToInt(k -> k).sum() / this.getTimeRange())
-        ) ;
+    private void calculateCarbonFootPrint() {
+        double averageCarbonIntensity = this.carbonIntensity.stream()
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0.0);
+
+        double operationalEmissions = appliance.getPowerConsumption()
+                * getTimeRange()
+                * averageCarbonIntensity
+                / GRAMS_TO_KG_CONVERSION_FACTOR;
+
+        this.carbonFootprint = (int) Math.round(appliance.getEmbodiedEmissions() + operationalEmissions);
+
     }
-    public static OptionalDouble calculateAverage(int[] numbers) {
-        return Arrays.stream(numbers).average();
-    }
+
     // EM + ((PC * TR) * CI)
 
     public int getCarbonFootprint(){

@@ -34,19 +34,18 @@ public class ApplianceParser {
 
     private boolean validateAppliances(List<AppliancePanel> appliancePanelList) {
         for (AppliancePanel appliancePanel : appliancePanelList) {
-            if (appliancePanel.typeBox.getSelectedItem() == "Select Type") {
-                return false;
-            } else if (appliancePanel.nameBox.getSelectedItem() == "Select Model") {
-                return false;
-            } else if (appliancePanel.roomBox.getSelectedItem() == "Select Room") {
+            if (isInvalidAppliance(appliancePanel)) {
                 return false;
             }
-            //TODO add time ranges to validation (start time greater than end time etc)
-            /*else if (appliancePanel.startTimeBox.getSelectedItem() == "00:00" && appliancePanel.endTimeBox.getSelectedItem() == "00:00") {
-                return false;
-            }*/
         }
         return true;
+    }
+
+    private boolean isInvalidAppliance(AppliancePanel panel) {
+        return "Select Type".equals(panel.typeBox.getSelectedItem()) ||
+                "Select Model".equals(panel.nameBox.getSelectedItem()) ||
+                "Select Room".equals(panel.roomBox.getSelectedItem()) ||
+                panel.endTimeBox.getSelectedIndex() < panel.startTimeBox.getSelectedIndex();
     }
 
     private boolean validateCountry (JComboBox countryBox) {
