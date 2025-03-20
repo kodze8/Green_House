@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import database_service.*;
 
 
@@ -15,7 +17,8 @@ import database_service.*;
 public class DatabasePage {
     JFrame frame;
     ApplianceType selectedType;
-
+    static Set<String> applianceTypeOptions;
+    static {applianceTypeOptions = ApplianceType.getAllEnumCaptions();}
 
     public DatabasePage(){
         this.frame = new JFrame("Update Appliance Database");
@@ -67,7 +70,7 @@ public class DatabasePage {
 
 
         JTextField nameField = new JTextField();
-        JComboBox<appliance.ApplianceType> typeField = new JComboBox<>(appliance.ApplianceType.values());
+        JComboBox<String> typeField = new JComboBox<>(ApplianceType.getAllEnumCaptions().toArray(new String[0]));
         JTextField powerConsumptionField = new JTextField();
         JTextField embodiedEmissionsField = new JTextField();
 
@@ -85,7 +88,8 @@ public class DatabasePage {
 
         addButton.addActionListener(e -> {
             String name = nameField.getText();
-            appliance.ApplianceType type = (appliance.ApplianceType) typeField.getSelectedItem();
+            String selectedTypeCaption = (String) typeField.getSelectedItem();
+            ApplianceType type = ApplianceType.getEnumByCaption(selectedTypeCaption);
             float powerConsumption = Float.parseFloat(powerConsumptionField.getText());
             int embodiedEmissions = Integer.parseInt(embodiedEmissionsField.getText());
 
@@ -107,8 +111,7 @@ public class DatabasePage {
         dialog.setLayout(new GridLayout(3, 2));
         dialog.setSize(300, 150);
 
-
-        JComboBox<appliance.ApplianceType> typeField = new JComboBox<>(appliance.ApplianceType.values());
+        JComboBox<String> typeField = new JComboBox<>(ApplianceType.getAllEnumCaptions().toArray(new String[0]));
         JComboBox<String> nameField = new JComboBox<>();
 
         dialog.add(new JLabel("Appliance Type:"));
@@ -116,42 +119,39 @@ public class DatabasePage {
         dialog.add(new JLabel("Appliance Name:"));
         dialog.add(nameField);
 
-
         typeField.addActionListener(e -> {
-            appliance.ApplianceType selectedType = (appliance.ApplianceType) typeField.getSelectedItem();
+            String selectedTypeCaption = (String) typeField.getSelectedItem();
+            ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
             nameField.removeAllItems();
-            Map<appliance.ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+
+            Map<ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+
+
             if (applianceMap != null && applianceMap.containsKey(selectedType)) {
-                for (String name : applianceMap.get(selectedType)) {
-                    nameField.addItem(name);
+                List<String> applianceNames = applianceMap.get(selectedType);
+                if (applianceNames != null) {
+                    for (String name : applianceNames) {
+                        nameField.addItem(name);
+                    }
                 }
             }
         });
 
-        JButton deleteButton = getJButton(nameField, dialog);
-
-        dialog.add(deleteButton);
-        dialog.setVisible(true);
-    }
-
-    private static JButton getJButton(JComboBox<String> nameField, JDialog dialog) {
         JButton deleteButton = new JButton("Delete");
-
         deleteButton.addActionListener(e -> {
             String selectedName = (String) nameField.getSelectedItem();
             if (selectedName != null) {
                 if (ApplianceService.deleteAppliance(selectedName)) {
                     JOptionPane.showMessageDialog(dialog, "Appliance deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                }
-                else {
+                } else {
                     JOptionPane.showMessageDialog(dialog, "Delete appliance failed.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
                 dialog.dispose();
-
             }
         });
-        return deleteButton;
+
+        dialog.add(deleteButton);
+        dialog.setVisible(true);
     }
 
     private void openUpdateApplianceDialog() {
@@ -159,7 +159,7 @@ public class DatabasePage {
         dialog.setLayout(new GridLayout(6, 2));
         dialog.setSize(600, 300);
 
-        JComboBox<appliance.ApplianceType> typeField = new JComboBox<>(appliance.ApplianceType.values());
+        JComboBox<String> typeField = new JComboBox<>(ApplianceType.getAllEnumCaptions().toArray(new String[0]));
         JComboBox<String> nameField = new JComboBox<>();
         JTextField powerConsumptionField = new JTextField();
         JTextField embodiedEmissionsField = new JTextField();
@@ -174,12 +174,19 @@ public class DatabasePage {
         dialog.add(embodiedEmissionsField);
 
         typeField.addActionListener(e -> {
-            selectedType = (appliance.ApplianceType) typeField.getSelectedItem();
+            String selectedTypeCaption = (String) typeField.getSelectedItem();
+            ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
             nameField.removeAllItems();
-            Map<appliance.ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+
+            Map<ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+
+
             if (applianceMap != null && applianceMap.containsKey(selectedType)) {
-                for (String name : applianceMap.get(selectedType)) {
-                    nameField.addItem(name);
+                List<String> applianceNames = applianceMap.get(selectedType);
+                if (applianceNames != null) {
+                    for (String name : applianceNames) {
+                        nameField.addItem(name);
+                    }
                 }
             }
         });
@@ -188,19 +195,21 @@ public class DatabasePage {
         JButton updateButton = new JButton("Update");
         updateButton.addActionListener(e -> {
             String selectedName = (String) nameField.getSelectedItem();
+            String selectedTypeCaption = (String) typeField.getSelectedItem();
+            ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
 
-            if (selectedName != null) {
+            if (selectedName != null && selectedType != null) {
                 float powerConsumption = Float.parseFloat(powerConsumptionField.getText());
                 int embodiedEmissions = Integer.parseInt(embodiedEmissionsField.getText());
 
                 if (ApplianceService.updateAppliance(selectedName, selectedType, powerConsumption, embodiedEmissions)) {
                     JOptionPane.showMessageDialog(dialog, "Appliance updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                }
-                else {
+                } else {
                     JOptionPane.showMessageDialog(dialog, "Update appliance failed.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
                 dialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Please select a valid appliance type.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
