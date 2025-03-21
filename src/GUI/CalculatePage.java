@@ -1,11 +1,9 @@
 package GUI;
 
-import appliance.Appliance;
-import appliance.ApplianceUsage;
 import carbon_intensity.Country;
 import controllers.HouseholdController;
 import energy_label.EnergyLabel;
-import gui_parser.ApplianceParser;
+import gui_parser.ApplianceValidator;
 import household.Household;
 
 import javax.swing.*;
@@ -169,47 +167,26 @@ public class CalculatePage {
     private void createCalculateButton() {
         JButton calculateButton = new JButton("Calculate Carbon Footprint");
         calculateButton.addActionListener(e -> {
-            // see parser class
-            ApplianceParser parser = new ApplianceParser(this.appliancePanels, this.countryBox, this.energyLabelBox);
-            System.out.print(this.appliancePanels.get(0).endTimeBox.getSelectedItem());
-
-            if (!parser.validate(this.appliancePanels, this.countryBox, this.energyLabelBox)) {
-                JOptionPane.showMessageDialog(frame, "Validation failed\nPlease fill out all the required boxes", "Failed", JOptionPane.INFORMATION_MESSAGE);
+            ApplianceValidator validator = new ApplianceValidator(this.frame);
+            boolean validInputs = validator.validateInputs(this.appliancePanels, this.countryBox, this.energyLabelBox);
+            if (validInputs){
+                HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox);
+                Household household  = householdController.initializeHousehold();
+                openNewFrame(household.getCarbonFootPrint());
             }
-            else {
-                Household household;
-                household = HouseholdController.initiateHousehold(countryBox, energyLabelBox, HouseholdController.parseAppliances(this.appliancePanels, this.countryBox));
-
-                System.out.print(household.getEnergyLabel() + "\n");
-                List<ApplianceUsage> test = household.getAppliances();
-                ApplianceUsage test2 = test.get(0);
-                System.out.print(household.getAppliances() + "\n");
-                System.out.print(test2.getTimeRange() + "\n");
-                System.out.print(test2.getAppliance() + "\n");
-                System.out.print(test2.getUsageMode() + "\n");
-                System.out.print(test2.getCarbonFootprint() + "\n");
-                //System.out.print(test2.getPowerConsumption() + "\n");
-
-
-
-
-                openNewFrame();
-            }
-
-
         });
         this.buttonPanel.add(calculateButton);
     }
     private void createStatisticsButton() {
         JButton statisticsButton = new JButton("Show Statistics");
-        statisticsButton.addActionListener(e -> openNewFrame());
+        statisticsButton.addActionListener(e -> openNewFrame(0));
         this.buttonPanel.add(statisticsButton);
     }
 
     private void createRecommendationsButton() {
         //        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton recommendationButton = new JButton("Give me Recommendations");
-        recommendationButton.addActionListener(e -> openNewFrame());
+        recommendationButton.addActionListener(e -> openNewFrame(0));
         this.buttonPanel.add(recommendationButton);
     }
 
@@ -224,12 +201,12 @@ public class CalculatePage {
      *     this.buttonPanel.add(saveButton);
      * }
      */
-    private void openNewFrame() {
+    private void openNewFrame(Integer cf) {
         JFrame newFrame = new JFrame("New Frame");
         newFrame.setSize(300, 200);
         newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JLabel label = new JLabel("Hello World", SwingConstants.CENTER);
+        JLabel label = new JLabel(""+cf, SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 20)); // Set the font size
 
         // Add the label to the new frame

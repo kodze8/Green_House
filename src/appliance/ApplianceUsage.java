@@ -110,6 +110,12 @@ public class ApplianceUsage {
     };
 
 
+    @Override
+    public String toString(){
+        return this.appliance.toString() + "Start Time : "+this.startTime + ", End Time : "+this.endTime;
+    }
+
+
 
 
 

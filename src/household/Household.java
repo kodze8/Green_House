@@ -60,4 +60,15 @@ public class Household {
         sortedList.sort(comparator);
         return sortedList;
     }
+
+    // Temp, for testing purposes
+    public int getCarbonFootPrint(){
+        int summ= 0;
+        for (ApplianceUsage applianceUsage: this.appliances){
+            summ+=applianceUsage.getCarbonFootprint();
+
+        }
+        return summ;
+    }
+
 }

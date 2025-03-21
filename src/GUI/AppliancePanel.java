@@ -17,7 +17,7 @@ public class AppliancePanel {
     static Set<String> applianceTypeOptions;
     static String[] applianceNameOptions;
     static String[] timeOptions;
-    static HashMap<String, Integer> TIME_MAP;
+    public static HashMap<String, Integer> TIME_MAP;
 
     static int PANEL_WIDTH = 1050;
     static int PANEL_HEIGHT = 50;
@@ -33,6 +33,7 @@ public class AppliancePanel {
             timeOptions[h] = temp;
             TIME_MAP.put(temp, h);
         }
+
     }
 
     public JComboBox<String> typeBox;
@@ -126,5 +127,9 @@ public class AppliancePanel {
     private void designInputs() {
         this.startTimeBox.setPreferredSize(new Dimension(80, 30));
         this.endTimeBox.setPreferredSize(new Dimension(80, 30));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(TIME_MAP);
     }
 }

@@ -13,54 +13,46 @@ import java.util.List;
 import java.util.Objects;
 
 public class HouseholdController {
-
-    public boolean initiateAppliances(List<AppliancePanel> appliancePanelList) {
-        return true;
+    private final List<AppliancePanel> appliancePanelList;
+    private final JComboBox<String> countryBox;
+    private final JComboBox<String> energyLabelBox;
+    public HouseholdController(List<AppliancePanel> appliancePanelList, JComboBox<String> countryBox, JComboBox<String> energyLabelBox) {
+        this.appliancePanelList = appliancePanelList;
+        this.countryBox = countryBox;
+        this.energyLabelBox = energyLabelBox;
     }
 
-    public static List<ApplianceUsage> parseAppliances(List<AppliancePanel> appliancePanelList, JComboBox countryBox) {
-        List<ApplianceUsage> applianceUsages = new ArrayList<>();
-        for (AppliancePanel appliancePanel : appliancePanelList) {
-            String applianceName = Objects.requireNonNull(appliancePanel.nameBox.getSelectedItem()).toString();
-            //Appliance appliance = ApplianceService.retrieveAppliance(applianceName);
+    public Household initializeHousehold() {
+        Country country = parseCountry();
+        EnergyLabel energyLabel = parseEnergyLabel();
+        List<ApplianceUsage> appliances = parseAppliances();
 
-            Room room =  Room.getEnumByCaption(Objects.requireNonNull(appliancePanel.roomBox.getSelectedItem()).toString());
-            boolean alwaysOn = appliancePanel.alwaysOn.isSelected();
-            int startTime;
-            int endTime;
-            if (alwaysOn) {
-                startTime = 0;
-                endTime = 23;
-            }
-            else {
-                startTime = appliancePanel.startTimeBox.getSelectedIndex();
-                endTime = appliancePanel.endTimeBox.getSelectedIndex();
-            }
-            Country country = Country.getEnumByCaption( Objects.requireNonNull(countryBox.getSelectedItem()).toString());
-
-            ApplianceUsage applianceUsage =  new ApplianceUsage(applianceName, room, country, alwaysOn,  startTime,  endTime);
-            applianceUsages.add(applianceUsage);
-            System.out.print(applianceUsage);
-
-        }
-        return applianceUsages;
-    }
-    public static Household initiateHousehold(JComboBox countryBox, JComboBox energyLabelBox, List<ApplianceUsage> applianceUsages) {
-        Household household =  new Household(Country.getEnumByCaption(Objects.requireNonNull(countryBox.getSelectedItem()).toString()),
-                                            EnergyLabel.getEnumByCaption(Objects.requireNonNull(energyLabelBox.getSelectedItem()).toString()));
-        for (ApplianceUsage applianceUsage : applianceUsages) {
+        Household household = new Household(country, energyLabel);
+        for (ApplianceUsage applianceUsage: appliances){
             household.addAppliance(applianceUsage);
         }
-        System.out.print("\n" + household + "\n");
         return household;
     }
 
-    // when the calculate button is pressed
-    // this class object will be initiated.
-    // whenever the caculate is pressed if the object is null
-    // the initiate
+    private List<ApplianceUsage> parseAppliances() {
+        List<ApplianceUsage> applianceUsages = new ArrayList<>();
 
-    // before this class is craeted
-    // parser class will parse the information and trsnform adat here.
-    // those data will be used to create rhis class.
+        for (AppliancePanel panel : appliancePanelList) {
+            String name = Objects.requireNonNull(panel.nameBox.getSelectedItem()).toString();
+            Room room = Room.getEnumByCaption(Objects.requireNonNull(panel.roomBox.getSelectedItem()).toString());
+            boolean alwaysOn = panel.alwaysOn.isSelected();
+            int startTime = alwaysOn ? 0 : AppliancePanel.TIME_MAP.get(panel.startTimeBox.getSelectedItem());
+            int endTime = alwaysOn ? 23 : AppliancePanel.TIME_MAP.get(panel.endTimeBox.getSelectedItem());
+
+            applianceUsages.add(new ApplianceUsage(name, room, parseCountry(), alwaysOn, startTime, endTime));
+        }
+        return applianceUsages;
+    }
+    private Country parseCountry(){
+        return Country.getEnumByCaption(Objects.requireNonNull(this.countryBox.getSelectedItem()).toString());
+    }
+    private EnergyLabel parseEnergyLabel(){
+        return EnergyLabel.getEnumByCaption(Objects.requireNonNull(this.energyLabelBox.getSelectedItem()).toString());
+    }
+
 }
