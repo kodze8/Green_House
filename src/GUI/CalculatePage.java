@@ -1,5 +1,6 @@
 package GUI;
 
+import appliance.ApplianceUsage;
 import carbon_intensity.Country;
 import controllers.HouseholdController;
 import energy_label.EnergyLabel;
@@ -28,6 +29,9 @@ public class CalculatePage {
 
     private static final String[] energyLabelOptions = EnergyLabel.getAllEnumCaptions().toArray(new String[0]);
     private static final String[] countryOptions = Country.getAllEnumCaptions().toArray(new String[0]);
+
+    //TODO remove when household is SINGLETON
+    private Household tempHousehold;
 
     public CalculatePage() {
         this.appliancePanels = new ArrayList<>();
@@ -172,6 +176,7 @@ public class CalculatePage {
             if (validInputs){
                 HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox);
                 Household household  = householdController.initializeHousehold();
+                tempHousehold = household;
                 openNewFrame(household.getCarbonFootPrint());
             }
         });
@@ -179,7 +184,9 @@ public class CalculatePage {
     }
     private void createStatisticsButton() {
         JButton statisticsButton = new JButton("Show Statistics");
-        statisticsButton.addActionListener(e -> openNewFrame(0));
+
+        statisticsButton.addActionListener(e -> StatisticsPanel.openStatisticsWindow(tempHousehold));
+
         this.buttonPanel.add(statisticsButton);
     }
 

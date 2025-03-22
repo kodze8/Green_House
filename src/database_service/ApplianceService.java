@@ -18,7 +18,7 @@ public class ApplianceService {
 
         if (object != null) {
             String applianceName = object.getString(DatabaseService.DataBaseType.NAME);
-            ApplianceType applianceType = ApplianceType.getEnumByCaption(object.getString(DatabaseService.DataBaseType.TYPE));
+            ApplianceType applianceType = ApplianceType.valueOf(object.getString(DatabaseService.DataBaseType.TYPE));
             float appliancePC = (float)object.getDouble(DatabaseService.DataBaseType.POWER_CONSUMPTION);
             int embodiedEmissions = object.getInt(DatabaseService.DataBaseType.EMBODIED_EMISSION);
 
@@ -110,6 +110,9 @@ public class ApplianceService {
     public static void main(String[] args) {
         ApplianceType t = ApplianceType.BLENDER;
         System.out.println(ApplianceService.getApplianceList().get(t));
+        System.out.println(ApplianceService.retrieveAppliance("Sony PlayStation 4 Gaming Console"));
+        System.out.println(DatabaseService.retrieveObject("Sony PlayStation 4 Gaming Console"));
+
     }
 }
 
