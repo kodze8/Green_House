@@ -11,8 +11,9 @@ import java.util.List;
 
 public class Household {
     private Country country;
-    private List<ApplianceUsage> appliances;
+    private static List<ApplianceUsage> appliances;
     private EnergyLabel energyLabel;
+    private static final int flight = 134; //flight from amsterdam to paris for 1 person
 
     public Household(Country country, EnergyLabel energyLabel) {
         if (country == null || energyLabel == null) {
@@ -55,10 +56,15 @@ public class Household {
         return sortAppliances(ApplianceUsage.COMPARE_BY_TIME);
     }
 
-    private List<ApplianceUsage> sortAppliances(Comparator<ApplianceUsage> comparator) {
+    public static List<ApplianceUsage> sortAppliances(Comparator<ApplianceUsage> comparator) {
         List<ApplianceUsage> sortedList = new ArrayList<>(appliances);
         sortedList.sort(comparator);
         return sortedList;
+    }
+
+    public double flightConversion() {
+        double conversion = (double) getCarbonFootPrint() / flight;
+        return Math.floor(conversion * 100) / 100; //round on 2 decimals
     }
 
     // Temp, for testing purposes

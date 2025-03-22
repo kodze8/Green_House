@@ -19,6 +19,7 @@ public class ApplianceUsage {
     private Room room;
     private int carbonFootprint;
     private boolean alwaysOn;
+    private static final double GRAMS_TO_KG_CONVERSION_FACTOR = 1000.0;
 
 
     public ApplianceUsage(String name, Room room, Country country, boolean alwaysOn, int start, int end) {
@@ -76,13 +77,19 @@ public class ApplianceUsage {
                 (this.appliance.getPowerConsumption() * this.getTimeRange()) *
                         this.carbonIntensity.stream().mapToInt(k->k).sum());
      */
-    private void calculateCarbonFootPrint(){
-        //TODO
-        // Is carbon intensity calculated correctly?
-        this.carbonFootprint = (int) (this.appliance.getEmbodiedEmissions()+
-                (this.appliance.getPowerConsumption() * this.getTimeRange()) *
-                        ((float) this.carbonIntensity.stream().mapToInt(k -> k).sum() / this.getTimeRange())
-        ) ;
+    private void calculateCarbonFootPrint() {
+        double averageCarbonIntensity = this.carbonIntensity.stream()
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0.0);
+
+        double operationalEmissions = appliance.getPowerConsumption()
+                * getTimeRange()
+                * averageCarbonIntensity
+                / GRAMS_TO_KG_CONVERSION_FACTOR;
+
+        this.carbonFootprint = (int) Math.round(appliance.getEmbodiedEmissions() + operationalEmissions);
+
     }
     public static OptionalDouble calculateAverage(int[] numbers) {
         return Arrays.stream(numbers).average();
@@ -94,7 +101,7 @@ public class ApplianceUsage {
         return this.carbonFootprint;
     }
 
-    private Room getRoom(){
+    public Room getRoom(){
         return this.room;
     }
 
@@ -105,9 +112,10 @@ public class ApplianceUsage {
     public static final Comparator<ApplianceUsage> COMPARE_BY_CARBON_FOOTPRINT =
             new Comparator<ApplianceUsage>() {
                 @Override
-                public int compare(ApplianceUsage a1, ApplianceUsage a2) {
+                public int compare(ApplianceUsage a2, ApplianceUsage a1) {
                    return Integer.compare(a1.getCarbonFootprint(), a2.getCarbonFootprint());}
     };
+    public static final Comparator<ApplianceUsage> COMPARE_BY_ROOM = Comparator.comparing(a -> a.getRoom().getCaption());
 
 
     @Override

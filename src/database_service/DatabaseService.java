@@ -17,10 +17,10 @@ public class DatabaseService {
     static String DB_PATH = "src/database_service/appliance_db.json";
 
     public static class DataBaseType{
-        final static String NAME = "name";
-        final static String POWER_CONSUMPTION = "power_consumption_kwh";
-        final static String TYPE = "type";
-        final static String EMBODIED_EMISSION = "embodied_emissions_kgCO2e";
+        static final String NAME = "name";
+        static final String POWER_CONSUMPTION = "power_consumption_kwh";
+        static final String TYPE = "type";
+        static final String EMBODIED_EMISSION = "embodied_emissions_kgCO2e";
     }
 
     static boolean validateInput(JSONObject appliance) {
