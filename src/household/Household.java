@@ -10,29 +10,39 @@ import java.util.List;
 
 
 public class Household {
+    private static Household household;
     private Country country;
-    private static List<ApplianceUsage> appliances;
+    private List<ApplianceUsage> appliances;
     private EnergyLabel energyLabel;
     private static final int flight = 134; //flight from amsterdam to paris for 1 person
 
-    public Household(Country country, EnergyLabel energyLabel) {
-        if (country == null || energyLabel == null) {
-            throw new IllegalArgumentException("Country and EnergyLabel cannot be null");
+    private Household(Country country, EnergyLabel energyLabel) {
+        resetAttributes(country, energyLabel);
+    }
+
+// Each time we retrieve an instance, it is initialized with the specified country and label.
+// However, the list of appliances is reset upon each request for a new Household instance,
+// requiring appliances to be added again afterward.
+    public static Household getHouseholdInstance(Country country, EnergyLabel energyLabel){
+        if (household==null){
+            household = new Household(country, energyLabel);
+        }else {
+            household.resetAttributes(country, energyLabel);
         }
-        this.country = country;
-        this.energyLabel = energyLabel;
+        return household;
+    }
+
+
+    private void resetAttributes(Country country, EnergyLabel energyLabel){
+        setCountry(country);
+        setEnergyLabel(energyLabel);
         this.appliances = new ArrayList<>();
     }
-
     public void addAppliance(ApplianceUsage applianceUsage) {
         if (applianceUsage != null) {
-            appliances.add(applianceUsage);
+            this.appliances.add(applianceUsage);
         }
     }
-    public List<ApplianceUsage> getAppliances() {
-        return this.appliances;
-    }
-
     public void setCountry(Country newCountry){
         this.country = newCountry;
     }
@@ -57,7 +67,7 @@ public class Household {
     }
 
     public static List<ApplianceUsage> sortAppliances(Comparator<ApplianceUsage> comparator) {
-        List<ApplianceUsage> sortedList = new ArrayList<>(appliances);
+        List<ApplianceUsage> sortedList = new ArrayList<>(household.appliances);
         sortedList.sort(comparator);
         return sortedList;
     }
@@ -67,14 +77,12 @@ public class Household {
         return Math.floor(conversion * 100) / 100; //round on 2 decimals
     }
 
-    // Temp, for testing purposes
     public int getCarbonFootPrint(){
-        int summ= 0;
+        int total= 0;
         for (ApplianceUsage applianceUsage: this.appliances){
-            summ+=applianceUsage.getCarbonFootprint();
-
+            total+=applianceUsage.getCarbonFootprint();
         }
-        return summ;
+        return total;
     }
 
 }

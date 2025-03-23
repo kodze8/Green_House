@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class HouseholdController {
+    private static Household household;
     private final List<AppliancePanel> appliancePanelList;
     private final JComboBox<String> countryBox;
     private final JComboBox<String> energyLabelBox;
@@ -22,16 +23,20 @@ public class HouseholdController {
         this.energyLabelBox = energyLabelBox;
     }
 
-    public Household initializeHousehold() {
+    public Household getHousehold(){
+        updateHousehold();
+        return household;
+    }
+
+    private void updateHousehold() {
         Country country = parseCountry();
         EnergyLabel energyLabel = parseEnergyLabel();
         List<ApplianceUsage> appliances = parseAppliances();
 
-        Household household = new Household(country, energyLabel);
+        household = Household.getHouseholdInstance(country, energyLabel);
         for (ApplianceUsage applianceUsage: appliances){
             household.addAppliance(applianceUsage);
         }
-        return household;
     }
 
     private List<ApplianceUsage> parseAppliances() {

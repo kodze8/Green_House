@@ -1,6 +1,5 @@
 package GUI;
 
-import appliance.ApplianceUsage;
 import carbon_intensity.Country;
 import controllers.HouseholdController;
 import energy_label.EnergyLabel;
@@ -11,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CalculatePage {
 
@@ -31,7 +31,7 @@ public class CalculatePage {
     private static final String[] countryOptions = Country.getAllEnumCaptions().toArray(new String[0]);
 
     //TODO remove when household is SINGLETON
-    private Household tempHousehold;
+//    private Household tempHousehold;
 
     public CalculatePage() {
         this.appliancePanels = new ArrayList<>();
@@ -62,8 +62,8 @@ public class CalculatePage {
     private void createActionButtons() {
         createCalculateButton();
         createStatisticsButton();
-        createRecommendationsButton();
         /** Those two features are no more implemented.
+         * createRecommendationsButton();
          *  createSaveButton();
          *  createRestoreButton();
          */
@@ -168,37 +168,49 @@ public class CalculatePage {
         this.bodyPanel.add(buttonPanel);
     }
 
+    private Household createHousehold(){
+        ApplianceValidator validator = new ApplianceValidator(this.frame);
+        boolean validInputs = validator.validateInputs(this.appliancePanels, this.countryBox, this.energyLabelBox);
+        if (validInputs) {
+            HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox);
+            return householdController.getHousehold();
+        }
+        return null;
+    }
+    private void handleButtonClick(Consumer<Household> nextStep) {
+        Household household = createHousehold();
+        if (household != null) {
+            nextStep.accept(household);
+        }
+    }
     private void createCalculateButton() {
         JButton calculateButton = new JButton("Calculate Carbon Footprint");
-        calculateButton.addActionListener(e -> {
-            ApplianceValidator validator = new ApplianceValidator(this.frame);
-            boolean validInputs = validator.validateInputs(this.appliancePanels, this.countryBox, this.energyLabelBox);
-            if (validInputs){
-                HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox);
-                Household household  = householdController.initializeHousehold();
-                tempHousehold = household;
-                openNewFrame(household.getCarbonFootPrint());
-            }
-        });
-        this.buttonPanel.add(calculateButton);
+        calculateButton.addActionListener(e -> handleButtonClick(this::openCFWindow));
+        buttonPanel.add(calculateButton);
     }
+
     private void createStatisticsButton() {
         JButton statisticsButton = new JButton("Show Statistics");
-
-        statisticsButton.addActionListener(e -> StatisticsPanel.openStatisticsWindow(tempHousehold));
-
-        this.buttonPanel.add(statisticsButton);
+        statisticsButton.addActionListener(e -> handleButtonClick(this::openStatisticsWindow));
+        buttonPanel.add(statisticsButton);
     }
 
-    private void createRecommendationsButton() {
-        //        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton recommendationButton = new JButton("Give me Recommendations");
-        recommendationButton.addActionListener(e -> openNewFrame(0));
-        this.buttonPanel.add(recommendationButton);
+    private void openCFWindow(Household household) {
+        openNewFrame(household.getCarbonFootPrint());
     }
+
+    private void openStatisticsWindow(Household household) {
+        StatisticsPanel.openStatisticsWindow(household);
+    }
+    
 
     /** Those two features are no more implemented
      *
+     * private void createRecommendationsButton() {
+     *    JButton recommendationButton = new JButton("Give me Recommendations");
+     *    recommendationButton.addActionListener(e -> openNewFrame(0));
+     *    this.buttonPanel.add(recommendationButton);
+     * }
      * private void createSaveButton() {
      *     JButton saveButton = new JButton("Save Configuration");
      *     this.buttonPanel.add(saveButton);
