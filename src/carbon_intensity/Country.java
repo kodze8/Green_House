@@ -1,6 +1,6 @@
 package carbon_intensity;
 
-import enum_template.EnumTemplate;
+import enums.EnumTemplate;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,10 @@
+package enums;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public enum EnergyLabel  implements EnumTemplate{
+public enum EnergyLabel implements EnumTemplate{
     A_PLUS_PLUS(0.7, "A++"),
     A_PLUS(0.75, "A+"),
     A(0.85, "A"),

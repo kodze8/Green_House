@@ -1,9 +1,8 @@
-package GUI;
+package gui;
 
 import carbon_intensity.Country;
-import controllers.HouseholdController;
-import energy_label.EnergyLabel;
-import gui_parser.ApplianceValidator;
+import household.HouseholdController;
+import enums.EnergyLabel;
 import household.Household;
 
 import javax.swing.*;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class CalculatePage {
-
     private JFrame frame;
     private JPanel bodyPanel;
     private JPanel buttonPanel;
@@ -30,8 +28,6 @@ public class CalculatePage {
     private static final String[] energyLabelOptions = EnergyLabel.getAllEnumCaptions().toArray(new String[0]);
     private static final String[] countryOptions = Country.getAllEnumCaptions().toArray(new String[0]);
 
-    //TODO remove when household is SINGLETON
-//    private Household tempHousehold;
 
     public CalculatePage() {
         this.appliancePanels = new ArrayList<>();

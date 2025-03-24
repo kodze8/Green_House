@@ -1,10 +1,9 @@
-package GUI;
+package gui;
 
 import database_service.DatabaseService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomePage {

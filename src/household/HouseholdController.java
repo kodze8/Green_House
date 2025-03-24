@@ -1,11 +1,10 @@
-package controllers;
+package household;
 
-import GUI.AppliancePanel;
+import gui.AppliancePanel;
 import appliance.ApplianceUsage;
 import carbon_intensity.Country;
-import energy_label.EnergyLabel;
-import household.Household;
-import room.Room;
+import enums.EnergyLabel;
+import enums.Room;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -61,3 +60,4 @@ public class HouseholdController {
     }
 
 }
+

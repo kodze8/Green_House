@@ -21,8 +21,6 @@ public class Appliance {
         this.embodiedEmissions = embodiedEmissions;
     }
 
-
-
     public String getName() {
         return name;
     }

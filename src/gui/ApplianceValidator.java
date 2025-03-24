@@ -1,6 +1,5 @@
-package gui_parser;
+package gui;
 
-import GUI.AppliancePanel;
 import javax.swing.*;
 import java.util.List;
 

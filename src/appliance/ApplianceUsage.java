@@ -1,14 +1,31 @@
 package appliance;
-
 import carbon_intensity.CarbonIntensityService;
 import carbon_intensity.Country;
 import database_service.ApplianceService;
-import room.Room;
-
-import java.util.Arrays;
+import enums.Room;
 import java.util.Comparator;
 import java.util.List;
-import java.util.OptionalDouble;
+
+/*
+* The class clearly encapsulates ApplianceUsage properties (appliance, time, room, carbon footprint).
+*
+* Factory Pattern
+ * Since ApplianceUsage directly fetches an Appliance from ApplianceService, a Factory Pattern
+ * isn't useful because there's no need for complex instantiation logic.
+ * The database already acts as a source for appliance objects.
+ *
+ * Factories make sense when we have multiple ways to create objects or if object creation
+ * is complex (e.g., different ApplianceUsage subtypes). Here, we just fetch an Appliance from
+ * the database, making a factory redundant.
+ *
+ *
+* Builder Pattern
+ * Builders are useful for constructing objects step by step, especially when dealing with numerous
+ * optional parameters. ApplianceUsage has a clear constructor with well-defined parameters, so a builder
+ * would add unnecessary verbosity.
+
+* *
+ **/
 
 
 public class ApplianceUsage {
@@ -26,58 +43,12 @@ public class ApplianceUsage {
         this.appliance = ApplianceService.retrieveAppliance(name);
         this.room = room;
         this.alwaysOn = alwaysOn;
-        this.startTime = start;
-        this.endTime = end;
-        this.carbonIntensity = CarbonIntensityService.getCarbonIntensity(country.getCaption(),start,end);
+        this.startTime = alwaysOn ? 0 : start;
+        this.endTime = alwaysOn ? 24 : end;
+        this.carbonIntensity = CarbonIntensityService.getCarbonIntensity(country.getCaption(), this.startTime, this.endTime);
+        this.carbonFootprint = calculateCarbonFootPrint();
     }
-    public ApplianceUsage(String name, String room, boolean alwaysOn, Country country) {
-        this.appliance = ApplianceService.retrieveAppliance(name);
-        this.room = Room.valueOf(room);
-        this.alwaysOn = alwaysOn;
-        setTimes(alwaysOn, 0, 0);
-        this.carbonIntensity = CarbonIntensityService.getCarbonIntensity(country.getCaption(),this.startTime, this.endTime);
-    }
-
-    // ensuring immutability of the object
-    public Appliance getAppliance(){
-        return new Appliance(this.appliance.getName(),
-                this.appliance.getType(),
-                this.appliance.getPowerConsumption(),
-                this.appliance.getEmbodiedEmissions());
-    }
-
-    public void setTimes(boolean alwaysOn, int startTime, int endTime){
-        if(alwaysOn){
-            this.startTime = 0;
-            this.endTime = 24;
-            this.alwaysOn = true;
-        }
-        else{
-            this.startTime = startTime;
-            this.endTime = endTime;
-        }
-    }
-    public int getStartTime(){
-        return this.startTime;
-    }
-
-    public int getEndTime(){
-        return this.endTime;
-    }
-    public int getTimeRange(){
-        return this.endTime-this.startTime;
-    }
-    public boolean getUsageMode(){
-        return alwaysOn;
-    }
-
-
-    /*
-    this.carbonFootprint = (int) (this.appliance.getEmbodiedEmissions()+
-                (this.appliance.getPowerConsumption() * this.getTimeRange()) *
-                        this.carbonIntensity.stream().mapToInt(k->k).sum());
-     */
-    private void calculateCarbonFootPrint() {
+    private int calculateCarbonFootPrint() {
         double averageCarbonIntensity = this.carbonIntensity.stream()
                 .mapToInt(Integer::intValue)
                 .average()
@@ -88,43 +59,42 @@ public class ApplianceUsage {
                 * averageCarbonIntensity
                 / GRAMS_TO_KG_CONVERSION_FACTOR;
 
-        this.carbonFootprint = (int) Math.round(appliance.getEmbodiedEmissions() + operationalEmissions);
-
+        return (int) Math.round(appliance.getEmbodiedEmissions() + operationalEmissions);
     }
-    public static OptionalDouble calculateAverage(int[] numbers) {
-        return Arrays.stream(numbers).average();
-    }
-    // EM + ((PC * TR) * CI)
 
+    //Appliance itself is already immutable.
+    public Appliance getAppliance() {
+        return this.appliance;
+    }
+    public int getStartTime(){
+        return this.startTime;
+    }
+    public int getEndTime(){
+        return this.endTime;
+    }
+    public int getTimeRange(){
+        return this.endTime-this.startTime;
+    }
+    public boolean getUsageMode(){
+        return this.alwaysOn;
+    }
     public int getCarbonFootprint(){
-        calculateCarbonFootPrint();
         return this.carbonFootprint;
     }
-
     public Room getRoom(){
         return this.room;
     }
 
-    // Comparator based on time range
-    public static final Comparator<ApplianceUsage> COMPARE_BY_TIME = (a1, a2) -> Integer.compare(a1.getTimeRange(), a2.getTimeRange());
-
-    // Comparator based on carbon footprint
+    // Comparators
+    public static final Comparator<ApplianceUsage> COMPARE_BY_TIME =
+            (a1, a2) -> Integer.compare(a1.getTimeRange(), a2.getTimeRange());
     public static final Comparator<ApplianceUsage> COMPARE_BY_CARBON_FOOTPRINT =
-            new Comparator<ApplianceUsage>() {
-                @Override
-                public int compare(ApplianceUsage a2, ApplianceUsage a1) {
-                   return Integer.compare(a1.getCarbonFootprint(), a2.getCarbonFootprint());}
-    };
-    public static final Comparator<ApplianceUsage> COMPARE_BY_ROOM = Comparator.comparing(a -> a.getRoom().getCaption());
-
+            (a2, a1) -> Integer.compare(a1.getCarbonFootprint(), a2.getCarbonFootprint());
+    public static final Comparator<ApplianceUsage> COMPARE_BY_ROOM =
+            Comparator.comparing(a -> a.getRoom().getCaption());
 
     @Override
     public String toString(){
         return this.appliance.toString() + "Start Time : "+this.startTime + ", End Time : "+this.endTime;
     }
-
-
-
-
-
 }

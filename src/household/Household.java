@@ -1,28 +1,32 @@
 package household;
-
 import appliance.ApplianceUsage;
 import carbon_intensity.Country;
-import energy_label.EnergyLabel;
+import enums.EnergyLabel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/* Singleton
+Since a Household should only have one instance at any given time,
+the Singleton ensures that all the data related to a household (such as appliances,
+country, and energy label) is managed centrally. This prevents unnecessary duplication
+and ensures consistency across the application.
+
+Think about making Singleton actually functional by builder, that will set attributes separately.
+*/
 
 public class Household {
     private static Household household;
     private Country country;
-    private List<ApplianceUsage> appliances;
     private EnergyLabel energyLabel;
+    private List<ApplianceUsage> appliances;
     private static final int flight = 134; //flight from amsterdam to paris for 1 person
 
     private Household(Country country, EnergyLabel energyLabel) {
         resetAttributes(country, energyLabel);
     }
 
-// Each time we retrieve an instance, it is initialized with the specified country and label.
-// However, the list of appliances is reset upon each request for a new Household instance,
-// requiring appliances to be added again afterward.
     public static Household getHouseholdInstance(Country country, EnergyLabel energyLabel){
         if (household==null){
             household = new Household(country, energyLabel);
@@ -84,5 +88,9 @@ public class Household {
         }
         return total;
     }
-
 }
+
+
+
+
+

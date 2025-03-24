@@ -1,46 +1,72 @@
+package gui;
+
+import appliance.ApplianceType;
+import database_service.ApplianceService;
+import enums.Room;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Set;
 
 public class AppliancePanel {
     JPanel panel;
     static Set<String> roomOptions;
     static Set<String> applianceTypeOptions;
-    static String [] applianceNameOptions;
+    static String[] applianceNameOptions;
+    static String[] timeOptions;
+    public static HashMap<String, Integer> TIME_MAP;
 
-    static int PANEL_WIDTH  = 900;
-    static int PANEL_HEIGHT  = 50;
-
+    static int PANEL_WIDTH = 1050;
+    static int PANEL_HEIGHT = 50;
 
     static {
         roomOptions = Room.getAllEnumCaptions();
         applianceTypeOptions = ApplianceType.getAllEnumCaptions();
+
+        TIME_MAP = new HashMap<>();
+        timeOptions = new String[24];
+        for (int h = 0; h < 24; h++) {
+            String temp =  String.format("%02d:00", h);;
+            timeOptions[h] = temp;
+            TIME_MAP.put(temp, h);
+        }
+
     }
 
-    JComboBox<String> typeBox;
-    JComboBox<String> nameBox;
-    JComboBox<String> roomBox;
-    JTextField startTimeBox;
-    JTextField endTimeBox;
-    JCheckBox alwaysOn;
+    public JComboBox<String> typeBox;
+    public JComboBox<String> nameBox;
+    public JComboBox<String> roomBox;
+    public JComboBox<String> startTimeBox;
+    public JComboBox<String> endTimeBox;
+    public JCheckBox alwaysOn;
     JButton deleteButton;
 
-    public AppliancePanel(){
+    public AppliancePanel() {
         this.panel = new JPanel();
-        this.panel.setLayout(new BoxLayout(panel,  BoxLayout.X_AXIS));
+        this.panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         this.panel.setBackground(Color.RED);
         this.panel.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
-        // initialization
+        // Initialize dropdown options for time (rounded hours)
+
+
+        // Initialization
         this.typeBox = new JComboBox<>(applianceTypeOptions.toArray(new String[0]));
         this.nameBox = new JComboBox<>();
+        this.nameBox.setEnabled(false);
         this.roomBox = new JComboBox<>(roomOptions.toArray(new String[0]));
+        PanelStatics.addPlaceholder( this.typeBox, "Select Type");
+        PanelStatics.addPlaceholder( this.nameBox, "Select Model");
+        PanelStatics.addPlaceholder( this.roomBox, "Select Room");
+
+
+        this.startTimeBox = new JComboBox<>(timeOptions);
+        this.endTimeBox = new JComboBox<>(timeOptions);
         this.alwaysOn = new JCheckBox("Always On");
-        this.startTimeBox = new JTextField();
-        this.endTimeBox = new JTextField();
-        this.deleteButton = new JButton();
+        this.deleteButton = new JButton("Delete");
 
         designInputs();
 
@@ -56,34 +82,33 @@ public class AppliancePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateApplianceNameOptions();
+                nameBox.setEnabled(true);
                 nameBox.removeAllItems();
                 for (String name : applianceNameOptions) {
                     nameBox.addItem(name);
                 }
+                PanelStatics.addPlaceholder(nameBox, "Select Model");
+
             }
         });
 
         this.alwaysOn.addActionListener(e -> {
             if (this.alwaysOn.isSelected()) {
-                this.startTimeBox.setText("0");
-                this.endTimeBox.setText("24");
-                this.startTimeBox.setEditable(false);
-                this.endTimeBox.setEditable(false);
-            }else {
-                this.startTimeBox.setEditable(true);
-                this.endTimeBox.setEditable(true);
+                this.startTimeBox.setSelectedIndex(0);
+                this.endTimeBox.setSelectedIndex(23);
+                this.startTimeBox.setEnabled(false);
+                this.endTimeBox.setEnabled(false);
+            } else {
+                this.startTimeBox.setEnabled(true);
+                this.endTimeBox.setEnabled(true);
             }
         });
-
-        designInputs();
-
     }
 
-    private void updateApplianceNameOptions(){
+    private void updateApplianceNameOptions() {
         String selectedType = (String) typeBox.getSelectedItem();
         ApplianceType applianceType = ApplianceType.getEnumByCaption(selectedType);
         applianceNameOptions = ApplianceService.getApplianceList().get(applianceType).toArray(new String[0]);
-
     }
 
     public void cleanup() {
@@ -99,9 +124,12 @@ public class AppliancePanel {
         this.deleteButton = null;
     }
 
-    private void designInputs(){
-        //TODO
-        this.deleteButton.setText("Delete");
-        this.startTimeBox.setSize(80, 30);
+    private void designInputs() {
+        this.startTimeBox.setPreferredSize(new Dimension(80, 30));
+        this.endTimeBox.setPreferredSize(new Dimension(80, 30));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(TIME_MAP);
     }
 }

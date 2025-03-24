@@ -1,4 +1,4 @@
-package enum_template;
+package enums;
 
 import java.util.Map;
 import java.util.Set;

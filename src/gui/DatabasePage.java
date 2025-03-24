@@ -1,16 +1,13 @@
-package GUI;
+package gui;
 
 import appliance.ApplianceType;
+import database_service.ApplianceService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import database_service.*;
 
 
 

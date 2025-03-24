@@ -1,11 +1,17 @@
 package appliance;
-
-import enum_template.EnumTemplate;
-
+import enums.EnumTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
+/**
+ * Enums are in their respective feature packages rather than merging them into a single package.
+ * Reasons:
+ * 1. Each enum belongs to a specific feature, so keeping it within that feature package
+ *    maintains modularity and separation of concerns.:
+ * 2. The enum strictly represents types of appliances,
+ *    making it logically cohesive to keep it in the appliance package.
+ * 3. implements EnumTemplate. Explanation in EnumTemplate interface.
+ */
 public enum ApplianceType implements EnumTemplate{
     REFRIGERATOR("Refrigerator"),
     FREEZER("Freezer"),
