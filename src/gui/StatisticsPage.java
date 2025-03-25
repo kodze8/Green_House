@@ -6,6 +6,8 @@ import domain.Household;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class StatisticsPage {
     private static JPanel displayPanel;
@@ -16,30 +18,70 @@ public class StatisticsPage {
         statisticsFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         statisticsFrame.setLayout(new BoxLayout(statisticsFrame.getContentPane(), BoxLayout.Y_AXIS));
 
-
         displayPanel = new JPanel();
         displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
 
-        JButton sortByRoomButton = new JButton("Sort by Room");
-        sortByRoomButton.addActionListener(e -> {
-            List<ApplianceUsage> sortedByRoom = Household.sortAppliances(ApplianceUsage.COMPARE_BY_ROOM);
-            displaySortedAppliances(statisticsFrame, sortedByRoom);
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Align to the left
+        controlPanel.setMaximumSize(new Dimension(900, 100));
+
+        JComboBox<String> roomComboBox = new JComboBox<>();
+        roomComboBox.setMaximumSize(new Dimension(150, 30));
+        populateRoomComboBox(household, roomComboBox);
+
+        roomComboBox.addActionListener(e -> {
+            String selectedRoom = (String) roomComboBox.getSelectedItem();
+            List<ApplianceUsage> filteredAppliances = filterAppliancesByRoom(household, selectedRoom);
+            displaySortedAppliances(statisticsFrame, filteredAppliances);
         });
+
+        controlPanel.add(roomComboBox);
+
 
         JButton sortByCarbonFootprintButton = new JButton("Sort by Carbon Footprint");
+        sortByCarbonFootprintButton.setPreferredSize(new Dimension(150, 30)); // Set preferred size for the button
         sortByCarbonFootprintButton.addActionListener(e -> {
-            List<ApplianceUsage> sortedByCF = Household.sortAppliances(ApplianceUsage.COMPARE_BY_CARBON_FOOTPRINT);
-            displaySortedAppliances(statisticsFrame, sortedByCF);
+            String selectedRoom = (String) roomComboBox.getSelectedItem();
+            List<ApplianceUsage> sortedAppliances;
+
+            if ("All rooms".equals(selectedRoom)) {
+                // Sort all appliances if "Select Room" is chosen
+                sortedAppliances = household.sortByCarbonFootprint();
+            } else {
+                // Filter appliances by the selected room and then sort
+                List<ApplianceUsage> filteredAppliances = filterAppliancesByRoom(household, selectedRoom);
+                sortedAppliances = filteredAppliances.stream()
+                        .sorted(ApplianceUsage.COMPARE_BY_CARBON_FOOTPRINT)
+                        .collect(Collectors.toList());
+            }
+
+            displaySortedAppliances(statisticsFrame, sortedAppliances);
         });
 
-        statisticsFrame.add(sortByRoomButton);
-        statisticsFrame.add(sortByCarbonFootprintButton);
+        controlPanel.add(sortByCarbonFootprintButton);
 
-        JLabel flightConversionLabel = new JLabel("Your carbon footprint is equal to " + household.flightConversion() +" flights from Amsterdam to Paris.");
+        JLabel flightConversionLabel = new JLabel("Your yearly carbon footprint is equal to " + household.flightConversion() +" flights from Amsterdam to Paris!");
         statisticsFrame.add(flightConversionLabel);
 
+        statisticsFrame.add(controlPanel);
         statisticsFrame.add(new JScrollPane(displayPanel));
         statisticsFrame.setVisible(true);
+    }
+
+    private static void populateRoomComboBox(Household household, JComboBox<String> roomComboBox) {
+        Set<String> roomTypes = household.getAppliances().stream()
+                .map(applianceUsage -> applianceUsage.getRoom().getCaption())
+                .collect(Collectors.toSet());
+
+        roomComboBox.addItem("All rooms");
+        for (String roomType : roomTypes) {
+            roomComboBox.addItem(roomType);
+        }
+    }
+
+    private static List<ApplianceUsage> filterAppliancesByRoom(Household household, String roomType) {
+        return household.getAppliances().stream()
+                .filter(applianceUsage -> applianceUsage.getRoom().getCaption().equals(roomType)).collect(Collectors.toList());
     }
 
     private static void displaySortedAppliances(JFrame statisticsFrame, List<ApplianceUsage> sortedAppliances) {
@@ -49,7 +91,6 @@ public class StatisticsPage {
             JPanel appliancePanel = new JPanel();
             appliancePanel.setBorder(BorderFactory.createTitledBorder(applianceUsage.getAppliance().getName()));
             appliancePanel.setLayout(new GridLayout(1, 0));
-
 
             appliancePanel.add(new JLabel("Type: " + applianceUsage.getAppliance().getType().getCaption()));
             appliancePanel.add(new JLabel("Room: " + applianceUsage.getRoom().getCaption()));

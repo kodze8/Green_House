@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CarbonIntensityService {
-    private static final String FILE_PATH = "src/carbon_intensity/carbon_intensity.json";
+    private static final String FILE_PATH = "src/data/carbon_intensity.json";
 
     private static Optional<JSONObject> loadJsonData() {
         try (InputStream inputStream = new FileInputStream(FILE_PATH);
