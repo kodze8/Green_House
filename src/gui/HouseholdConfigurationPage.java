@@ -197,7 +197,7 @@ public class HouseholdConfigurationPage {
     }
 
     private void openCFWindow(Household household) {
-        openNewFrame(household.getCarbonFootPrint());
+        openNewFrame(household);
     }
 
     private void openStatisticsWindow(Household household) {
@@ -221,18 +221,28 @@ public class HouseholdConfigurationPage {
      *     this.buttonPanel.add(saveButton);
      * }
      */
-    private void openNewFrame(Integer cf) {
-        JFrame newFrame = new JFrame("New Frame");
-        newFrame.setSize(300, 200);
+    private void openNewFrame(Household household) {
+        JFrame newFrame = new JFrame("Carbon footprint");
+        newFrame.setSize(400, 500);
         newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JLabel label = new JLabel(""+cf, SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 20)); // Set the font size
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        // Add the label to the new frame
-        newFrame.add(label);
+        int cf = household.getCarbonFootPrint();
+        JLabel carbonFootprint = new JLabel("Your carbon footprint is: \n" + cf + " kgCO2e");
+        carbonFootprint.setFont(new Font("Arial", Font.BOLD, 20));
 
-        // Make the new frame visible
+        double adjustedCarbonFootprint = cf * household.getEnergyLabel().getEfficiencyFactor();
+        JLabel adjustedCF = new JLabel("Your carbon footprint adjusted for energy label is: \n" + (int)adjustedCarbonFootprint + " kgCO2e");
+        adjustedCF.setFont(new Font("Arial", Font.BOLD, 20));
+
+        // Add the labels to the panel
+        panel.add(carbonFootprint);
+        panel.add(adjustedCF);
+
+        // Add the panel to the frame
+        newFrame.add(panel);
         newFrame.setVisible(true);
     }
     public static void main(String[] args) {
