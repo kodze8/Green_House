@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DatabaseService {
 
-    static String DB_PATH = "src/database_service/appliance_db.json";
+    static String DB_PATH = "src/data/appliance_db.json";
 
     public static class DataBaseType{
         static final String NAME = "name";

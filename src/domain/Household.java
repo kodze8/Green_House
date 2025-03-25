@@ -76,7 +76,7 @@ public class Household {
     }
 
     public double flightConversion() {
-        double conversion = (double) getCarbonFootPrint() / flight;
+        double conversion = (double) (getCarbonFootPrint() * 365) / flight;
         return Math.floor(conversion * 100) / 100; //round on 2 decimals
     }
 
@@ -87,6 +87,8 @@ public class Household {
         }
         return total;
     }
+
+    public List<ApplianceUsage> getAppliances() {return this.appliances;}
 }
 
 
