@@ -1,7 +1,7 @@
 package gui;
 
-import appliance.ApplianceType;
-import database_service.ApplianceService;
+import enums.ApplianceType;
+import services.ApplianceService;
 import enums.Room;
 
 import javax.swing.*;
@@ -99,6 +99,8 @@ public class AppliancePanel {
                 this.startTimeBox.setEnabled(false);
                 this.endTimeBox.setEnabled(false);
             } else {
+                this.startTimeBox.setSelectedIndex(0);
+                this.endTimeBox.setSelectedIndex(0);
                 this.startTimeBox.setEnabled(true);
                 this.endTimeBox.setEnabled(true);
             }

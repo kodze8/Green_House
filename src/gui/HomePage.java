@@ -1,6 +1,6 @@
 package gui;
 
-import database_service.DatabaseService;
+import services.DatabaseService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class HomePage {
         buttonContainer.add(goToDB);
         buttonContainer.add(goToCalculate);
 
-        goToCalculate.addActionListener(e->{frame.dispose();new CalculatePage();});
+        goToCalculate.addActionListener(e->{frame.dispose();new HouseholdConfigurationPage();});
         goToDB.addActionListener(e -> {
             List<String> invalidEntries = DatabaseService.validateDatabase();
             //show popup with invalid entries if they exist
@@ -42,7 +42,7 @@ public class HomePage {
             }
 
             frame.dispose();
-            new DatabasePage();
+            new ApplianceDatabasePage();
         });
 
         wrapperPanel.add(buttonContainer);

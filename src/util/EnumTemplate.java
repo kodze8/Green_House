@@ -1,4 +1,4 @@
-package enums;
+package util;
 
 import java.util.Map;
 import java.util.Set;

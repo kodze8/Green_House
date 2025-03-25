@@ -1,11 +1,13 @@
 package enums;
 
+import util.EnumTemplate;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 
-public enum Room implements EnumTemplate{
+public enum Room implements EnumTemplate {
     LIVING_ROOM("Living Room"),
     KITCHEN("Kitchen"),
     BEDROOM("Bedroom"),

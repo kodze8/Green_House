@@ -1,9 +1,9 @@
 package gui;
 
-import carbon_intensity.Country;
-import household.HouseholdController;
+import enums.Country;
+import controllers.HouseholdController;
 import enums.EnergyLabel;
-import household.Household;
+import domain.Household;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class CalculatePage {
+public class HouseholdConfigurationPage {
     private JFrame frame;
     private JPanel bodyPanel;
     private JPanel buttonPanel;
@@ -29,7 +29,7 @@ public class CalculatePage {
     private static final String[] countryOptions = Country.getAllEnumCaptions().toArray(new String[0]);
 
 
-    public CalculatePage() {
+    public HouseholdConfigurationPage() {
         this.appliancePanels = new ArrayList<>();
         this.frame = createFrame();
         this.bodyPanel = new JPanel();
@@ -130,7 +130,7 @@ public class CalculatePage {
         this.energyLabelBox = new JComboBox(energyLabelOptions);
 
         PanelStatics.addPlaceholder(this.countryBox, "Select a country...");
-        PanelStatics.addPlaceholder(this.energyLabelBox, "Select Energy Label...");
+        PanelStatics.addPlaceholder(this.energyLabelBox, "Select an energy Label...");
 
         lowerHeadPanel.add(countryBox);
         lowerHeadPanel.add(energyLabelBox);
@@ -196,7 +196,7 @@ public class CalculatePage {
     }
 
     private void openStatisticsWindow(Household household) {
-        StatisticsPanel.openStatisticsWindow(household);
+        StatisticsPage.openStatisticsWindow(household);
     }
     
 
@@ -231,7 +231,7 @@ public class CalculatePage {
         newFrame.setVisible(true);
     }
     public static void main(String[] args) {
-        new CalculatePage();
+        new HouseholdConfigurationPage();
 
     }
 }

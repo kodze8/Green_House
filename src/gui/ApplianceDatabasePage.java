@@ -1,7 +1,7 @@
 package gui;
 
-import appliance.ApplianceType;
-import database_service.ApplianceService;
+import enums.ApplianceType;
+import services.ApplianceService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,13 +11,13 @@ import java.util.Set;
 
 
 
-public class DatabasePage {
+public class ApplianceDatabasePage {
     JFrame frame;
     ApplianceType selectedType;
     static Set<String> applianceTypeOptions;
     static {applianceTypeOptions = ApplianceType.getAllEnumCaptions();}
 
-    public DatabasePage(){
+    public ApplianceDatabasePage(){
         this.frame = new JFrame("Update Appliance Database");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(new Dimension(500,500));

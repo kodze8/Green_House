@@ -1,8 +1,9 @@
-package household;
+package controllers;
 
+import domain.Household;
 import gui.AppliancePanel;
-import appliance.ApplianceUsage;
-import carbon_intensity.Country;
+import domain.ApplianceUsage;
+import enums.Country;
 import enums.EnergyLabel;
 import enums.Room;
 

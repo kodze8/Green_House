@@ -1,7 +1,7 @@
-package database_service;
+package services;
 
-import appliance.Appliance;
-import appliance.ApplianceType;
+import domain.Appliance;
+import enums.ApplianceType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

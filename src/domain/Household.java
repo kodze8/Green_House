@@ -1,6 +1,5 @@
-package household;
-import appliance.ApplianceUsage;
-import carbon_intensity.Country;
+package domain;
+import enums.Country;
 import enums.EnergyLabel;
 
 import java.util.ArrayList;

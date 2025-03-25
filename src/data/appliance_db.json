@@ -24,12 +24,6 @@
         "type": "REFRIGERATOR"
     },
     {
-        "name": "GE GNE27JYMFS Freezer",
-        "power_consumption_kwh": 0.45,
-        "embodied_emissions_kgCO2e": 120,
-        "type": "FREEZER"
-    },
-    {
         "name": "Frigidaire FFFU16F2VW Freezer",
         "power_consumption_kwh": 0.5,
         "embodied_emissions_kgCO2e": 130,
