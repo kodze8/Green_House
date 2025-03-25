@@ -53,6 +53,10 @@ public class Household {
         this.energyLabel = energyLabel;
     }
 
+    public void setAppliances(List<ApplianceUsage> appliances){
+        this.appliances = appliances;
+    }
+
     public EnergyLabel getEnergyLabel(){
         return this.energyLabel;
     }

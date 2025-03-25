@@ -1,37 +1,40 @@
 package controllers;
-
-import domain.Household;
-import gui.AppliancePanel;
 import domain.ApplianceUsage;
+import domain.Household;
 import enums.Country;
 import enums.EnergyLabel;
-import enums.Room;
+import gui.AppliancePanel;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class HouseholdController {
     private static Household household;
-    private final List<AppliancePanel> appliancePanelList;
-    private final JComboBox<String> countryBox;
-    private final JComboBox<String> energyLabelBox;
-    public HouseholdController(List<AppliancePanel> appliancePanelList, JComboBox<String> countryBox, JComboBox<String> energyLabelBox) {
-        this.appliancePanelList = appliancePanelList;
-        this.countryBox = countryBox;
-        this.energyLabelBox = energyLabelBox;
+    private final CountryHandler countryHandler;
+    private final EnergyLabelHandler energyLabelHandler;
+    private final ApplianceHandler applianceHandler;
+
+    public HouseholdController(List<AppliancePanel> appliancePanelList, JComboBox<String> countryBox, JComboBox<String> energyLabelBox, JFrame frame) {
+        this.countryHandler = new CountryHandler(countryBox,frame);
+        this.energyLabelHandler = new EnergyLabelHandler(energyLabelBox, frame);
+        this.applianceHandler = new ApplianceHandler(appliancePanelList, frame);
     }
 
-    public Household getHousehold(){
-        updateHousehold();
-        return household;
-    }
+    public void updateHousehold() {
+        household = null;
+        Country country =  countryHandler.handle();
+        if (country!=null)
+            applianceHandler.setCountry(country);
+        else
+            return;
 
-    private void updateHousehold() {
-        Country country = parseCountry();
-        EnergyLabel energyLabel = parseEnergyLabel();
-        List<ApplianceUsage> appliances = parseAppliances();
+        EnergyLabel energyLabel = energyLabelHandler.handle();
+        if (energyLabel==null)
+            return;
+
+        List<ApplianceUsage> appliances = applianceHandler.handle();
+        if (appliances==null || appliances.isEmpty())
+            return;
 
         household = Household.getHouseholdInstance(country, energyLabel);
         for (ApplianceUsage applianceUsage: appliances){
@@ -39,26 +42,9 @@ public class HouseholdController {
         }
     }
 
-    private List<ApplianceUsage> parseAppliances() {
-        List<ApplianceUsage> applianceUsages = new ArrayList<>();
-
-        for (AppliancePanel panel : appliancePanelList) {
-            String name = Objects.requireNonNull(panel.nameBox.getSelectedItem()).toString();
-            Room room = Room.getEnumByCaption(Objects.requireNonNull(panel.roomBox.getSelectedItem()).toString());
-            boolean alwaysOn = panel.alwaysOn.isSelected();
-            int startTime = alwaysOn ? 0 : AppliancePanel.TIME_MAP.get(panel.startTimeBox.getSelectedItem());
-            int endTime = alwaysOn ? 23 : AppliancePanel.TIME_MAP.get(panel.endTimeBox.getSelectedItem());
-
-            applianceUsages.add(new ApplianceUsage(name, room, parseCountry(), alwaysOn, startTime, endTime));
-        }
-        return applianceUsages;
+    public Household getHousehold() {
+        updateHousehold();
+        return household;
     }
-    private Country parseCountry(){
-        return Country.getEnumByCaption(Objects.requireNonNull(this.countryBox.getSelectedItem()).toString());
-    }
-    private EnergyLabel parseEnergyLabel(){
-        return EnergyLabel.getEnumByCaption(Objects.requireNonNull(this.energyLabelBox.getSelectedItem()).toString());
-    }
-
 }
 
