@@ -1,4 +1,4 @@
-package gui;
+package util;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -21,6 +21,5 @@ public class PanelStatics {
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
-
     }
 }

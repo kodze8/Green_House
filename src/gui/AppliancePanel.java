@@ -3,6 +3,7 @@ package gui;
 import enums.ApplianceType;
 import services.ApplianceService;
 import enums.Room;
+import util.PanelStatics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,9 +59,9 @@ public class AppliancePanel {
         this.nameBox = new JComboBox<>();
         this.nameBox.setEnabled(false);
         this.roomBox = new JComboBox<>(roomOptions.toArray(new String[0]));
-        PanelStatics.addPlaceholder( this.typeBox, "Select Type");
-        PanelStatics.addPlaceholder( this.nameBox, "Select Model");
-        PanelStatics.addPlaceholder( this.roomBox, "Select Room");
+//        PanelStatics.addPlaceholder( this.typeBox, "Select Type");
+//        PanelStatics.addPlaceholder( this.nameBox, "Select Model");
+//        PanelStatics.addPlaceholder( this.roomBox, "Select Room");
 
 
         this.startTimeBox = new JComboBox<>(timeOptions);
@@ -87,7 +88,7 @@ public class AppliancePanel {
                 for (String name : applianceNameOptions) {
                     nameBox.addItem(name);
                 }
-                PanelStatics.addPlaceholder(nameBox, "Select Model");
+//                PanelStatics.addPlaceholder(nameBox, "Select Model");
 
             }
         });

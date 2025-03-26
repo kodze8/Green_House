@@ -2,6 +2,7 @@ package gui;
 
 import enums.ApplianceType;
 import services.ApplianceService;
+import services.DatabaseService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -217,8 +218,16 @@ public class ApplianceDatabasePage {
         dialog.setVisible(true);
 
     }
-
-
-
 }
 
+
+//List<String> invalidEntries = DatabaseService.validateDatabase();
+////show popup with invalid entries if they exist
+//            if (!invalidEntries.isEmpty()) {
+//StringBuilder message = new StringBuilder("The following entries are invalid:\n");
+//
+//                for (String entry : invalidEntries) {
+//        message.append(entry).append("\n");
+//                }
+//                        JOptionPane.showMessageDialog(frame, message.toString(), "Invalid Database Entries", JOptionPane.ERROR_MESSAGE);
+//        }

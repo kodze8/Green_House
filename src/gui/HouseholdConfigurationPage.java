@@ -4,6 +4,7 @@ import enums.Country;
 import controllers.HouseholdController;
 import enums.EnergyLabel;
 import domain.Household;
+import util.PanelStatics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +41,7 @@ public class HouseholdConfigurationPage {
         this.frame.add(this.buttonPanel, BorderLayout.SOUTH);
 
         createHeader();
-        createScroll();
+//        createScroll();
         createAddApplianceButton();
         createActionButtons();
 
@@ -129,8 +130,8 @@ public class HouseholdConfigurationPage {
         this.countryBox = new JComboBox(countryOptions);
         this.energyLabelBox = new JComboBox(energyLabelOptions);
 
-        PanelStatics.addPlaceholder(this.countryBox, "Select a country...");
-        PanelStatics.addPlaceholder(this.energyLabelBox, "Select an energy Label...");
+//        PanelStatics.addPlaceholder(this.countryBox, "Select a country...");
+//        PanelStatics.addPlaceholder(this.energyLabelBox, "Select an energy Label...");
 
         lowerHeadPanel.add(countryBox);
         lowerHeadPanel.add(energyLabelBox);
@@ -147,13 +148,6 @@ public class HouseholdConfigurationPage {
         frame.dispose();
     }
 
-    private void createScroll() {
-        this.scrollPane = new JScrollPane(this.bodyPanel);
-        this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        this.scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        this.frame.add(scrollPane, BorderLayout.CENTER);
-    }
-
     private void createAddApplianceButton() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addApplianceButton = new JButton("Add Appliance");
@@ -163,16 +157,6 @@ public class HouseholdConfigurationPage {
         this.bodyPanel.add(Box.createVerticalStrut(20));
         this.bodyPanel.add(buttonPanel);
     }
-
-//    private Household createHousehold(){
-//        ApplianceValidator validator = new ApplianceValidator(this.frame);
-//        boolean validInputs = validator.validateInputs(this.appliancePanels, this.countryBox, this.energyLabelBox);
-//        if (validInputs) {
-//            HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox);
-//            return householdController.getHousehold();
-//        }
-//        return null;
-//    }
 
     private Household createHousehold(){
         HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox, this.frame);
