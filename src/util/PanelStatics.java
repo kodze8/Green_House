@@ -5,7 +5,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 public class PanelStatics {
-    static void addPlaceholder(JComboBox jComboBox, String placeHolder){
+    public static void addPlaceholder(JComboBox jComboBox, String placeHolder){
         jComboBox.insertItemAt(placeHolder, 0);
         jComboBox.setSelectedIndex(0);
         jComboBox.addPopupMenuListener(new PopupMenuListener() {

@@ -50,14 +50,14 @@ public class HouseholdConfigurationPage2 extends PageTemplate {
         headerPanel.add(titlePanel);
         headerPanel.add(householdFieldsPanel);
 
-//        frame.add(headerPanel, BorderLayout.NORTH);
+        //frame.add(headerPanel, BorderLayout.NORTH);
 
         return headerPanel;
     }
 
     @Override
     protected JPanel createContentPanel() {
-        JPanel contentPanel = createPanel(1100, 700, null);
+        JPanel contentPanel = createPanel(1100, 700, new BorderLayout()); // Use BorderLayout
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         this.bodyPanel = contentPanel;
 
@@ -72,7 +72,7 @@ public class HouseholdConfigurationPage2 extends PageTemplate {
         buttonActionsPanel.setLayout(new BoxLayout(buttonActionsPanel, BoxLayout.X_AXIS));
         createActionButton("Calculate Carbon Footprint", () -> handleButtonClick(this::openCFWindow), buttonActionsPanel, BorderLayout.WEST);
         createActionButton("Show Statistics", () -> handleButtonClick(this::openStatisticsWindow), buttonActionsPanel, BorderLayout.WEST);
-        this.bodyPanel.add(buttonActionsPanel, BorderLayout.SOUTH);
+        this.bodyPanel.add(buttonActionsPanel, BorderLayout.SOUTH); // Add to the bottom of the bodyPanel
 
         return contentPanel;
     }
@@ -143,7 +143,7 @@ public class HouseholdConfigurationPage2 extends PageTemplate {
     }
 
     public static void main(String[] args) {
-        new HouseholdConfigurationPage();
+        new HouseholdConfigurationPage2();
     }
 }
 
