@@ -164,16 +164,6 @@ public class HouseholdConfigurationPage {
         this.bodyPanel.add(buttonPanel);
     }
 
-//    private Household createHousehold(){
-//        ApplianceValidator validator = new ApplianceValidator(this.frame);
-//        boolean validInputs = validator.validateInputs(this.appliancePanels, this.countryBox, this.energyLabelBox);
-//        if (validInputs) {
-//            HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox);
-//            return householdController.getHousehold();
-//        }
-//        return null;
-//    }
-
     private Household createHousehold(){
         HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox, this.frame);
         return householdController.getHousehold();

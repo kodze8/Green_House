@@ -22,18 +22,14 @@ public class HouseholdController {
 
     public void updateHousehold() {
         household = null;
+
         Country country =  countryHandler.handle();
-        if (country!=null)
-            applianceHandler.setCountry(country);
-        else
-            return;
+        applianceHandler.setCountry(country);
 
         EnergyLabel energyLabel = energyLabelHandler.handle();
-        if (energyLabel==null)
-            return;
-
         List<ApplianceUsage> appliances = applianceHandler.handle();
-        if (appliances==null || appliances.isEmpty())
+
+        if (country==null || energyLabel==null || appliances==null || appliances.isEmpty())
             return;
 
         household = Household.getHouseholdInstance(country, energyLabel);
