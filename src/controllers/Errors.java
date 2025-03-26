@@ -10,6 +10,7 @@ public class Errors {
     final static String  APPLIANCE_MODEL_ERROR = "Appliances model is missing.";
     final static String  APPLIANCE_ROOM_ERROR = "Appliances room is missing.";
     final static String  APPLIANCE_TIME_ERROR = "Start and end time can not be equal.";
+    final static String  APPLIANCE_EMPTY = "There is no appliance in the Household.";
 
 
     public static void showError(JFrame frame, String message) {

@@ -35,6 +35,8 @@ public class ApplianceHandler implements Handler {
 
     @Override
     public List<ApplianceUsage> parse() {
+        if(country==null)
+            return null;
         List<ApplianceUsage> applianceUsages = new ArrayList<>();
         for (AppliancePanel panel : appliancePanelList) {
             String name = Objects.requireNonNull(panel.nameBox.getSelectedItem()).toString();
@@ -44,6 +46,7 @@ public class ApplianceHandler implements Handler {
             int endTime = alwaysOn ? 23 : AppliancePanel.TIME_MAP.get(panel.endTimeBox.getSelectedItem());
             applianceUsages.add(new ApplianceUsage(name, room, country, alwaysOn, startTime, endTime)); // Pass the country here
         }
+        if (applianceUsages.isEmpty()) Errors.showError(frame, Errors.APPLIANCE_EMPTY);
         return applianceUsages;
     }
 
