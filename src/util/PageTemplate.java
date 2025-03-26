@@ -16,16 +16,16 @@ public abstract class PageTemplate {
         frame = createFrame(title, width, height);
 
         // Wrapper panel for centering content
-        JPanel wrapperPanel = createPanel(0,0,new GridBagLayout());
+        JPanel wrapperPanel = createPanel(0, 0, new BorderLayout());
         JPanel headerPanel = createHeaderPanel();
         JPanel contentPanel = createContentPanel(); // Abstract method for custom content
 
         if (headerPanel != null) {
-            wrapperPanel.add(headerPanel);
+            wrapperPanel.add(headerPanel, BorderLayout.NORTH);
         }
 
         if (contentPanel != null) {
-            wrapperPanel.add(contentPanel);
+            wrapperPanel.add(contentPanel, BorderLayout.CENTER);
         }
 
         frame.add(wrapperPanel, BorderLayout.CENTER);
