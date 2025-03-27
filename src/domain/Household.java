@@ -20,7 +20,7 @@ public class Household {
     private Country country;
     private EnergyLabel energyLabel;
     private List<ApplianceUsage> appliances;
-    private static final int flight = 134; //flight from amsterdam to paris for 1 person
+    private static final int FLIGHT = 134; //Estimated carbon footprint of a flight from Amsterdam to Paris for 1 person
 
     private Household(Country country, EnergyLabel energyLabel) {
         resetAttributes(country, energyLabel);
@@ -79,9 +79,14 @@ public class Household {
         return sortedList;
     }
 
-    public double flightConversion() {
-        double conversion = (double) (getCarbonFootPrint() * 365) / flight;
-        return Math.floor(conversion * 100) / 100; //round on 2 decimals
+    public int flightConversion() {
+        double conversion = (double) (getCarbonFootPrint() * 365) / FLIGHT;
+        return (int) (Math.floor(conversion * 100) / 100); //round on 2 decimals
+    }
+
+    public int energyLabelConversion(){
+        double efficiencyFactor = energyLabel.getEfficiencyFactor();
+        return (int) (this.getCarbonFootPrint() * efficiencyFactor);
     }
 
     public int getCarbonFootPrint(){

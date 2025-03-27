@@ -1,11 +1,13 @@
 package controllers;
 import enums.Country;
+import util.Errors;
+import util.Handler;
 
 import javax.swing.*;
 import java.util.Objects;
 
-public class CountryHandler implements Handler{
-    private JFrame frame;
+public class CountryHandler implements Handler {
+    private final JFrame frame;
     JComboBox<String> countryBox;
     public CountryHandler(JComboBox<String> countryBox, JFrame frame){
         this.countryBox = countryBox;
@@ -22,7 +24,7 @@ public class CountryHandler implements Handler{
     }
     @Override
     public boolean validate() {
-        if ("Select a country...".equals(this.countryBox.getSelectedItem())) {
+        if ("Select Country".equals(this.countryBox.getSelectedItem())) {
             Errors.showError(this.frame, Errors.COUNTRY_ERROR);
             return false;
         }

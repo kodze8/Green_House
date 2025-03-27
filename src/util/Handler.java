@@ -1,4 +1,4 @@
-package controllers;
+package util;
 
 public interface Handler <T> {
     T handle();

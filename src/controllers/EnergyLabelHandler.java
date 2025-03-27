@@ -1,12 +1,14 @@
 package controllers;
 import enums.*;
+import util.Errors;
+import util.Handler;
 
 import javax.swing.*;
 import java.util.Objects;
 
-public class EnergyLabelHandler implements Handler{
+public class EnergyLabelHandler implements Handler {
     JComboBox<String> energyLabelBox;
-    private JFrame frame;
+    private final JFrame frame;
     public EnergyLabelHandler(JComboBox<String> energyLabelBox, JFrame frame){
         this.energyLabelBox = energyLabelBox;
         this.frame = frame;
@@ -26,7 +28,7 @@ public class EnergyLabelHandler implements Handler{
 
     @Override
     public boolean validate() {
-        if ("Select an energy Label...".equals(this.energyLabelBox.getSelectedItem())) {
+        if ("Select Energy Label".equals(this.energyLabelBox.getSelectedItem())) {
             Errors.showError(this.frame, Errors.ENERGY_ERROR);
             return false;
         }

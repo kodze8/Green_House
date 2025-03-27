@@ -4,6 +4,8 @@ import domain.ApplianceUsage;
 import enums.Country;
 import enums.Room;
 import gui.AppliancePanel;
+import util.Errors;
+import util.Handler;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -11,8 +13,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ApplianceHandler implements Handler {
-    private List<AppliancePanel> appliancePanelList;
-    private JFrame frame;
+    private final List<AppliancePanel> appliancePanelList;
+    private final JFrame frame;
     private Country country;
 
     public ApplianceHandler(List<AppliancePanel> appliancePanelList, JFrame frame) {
@@ -65,7 +67,7 @@ public class ApplianceHandler implements Handler {
                 Errors.showError(frame, Errors.APPLIANCE_ROOM_ERROR);
                 return false;
             }
-            if (panel.startTimeBox.getSelectedItem().equals(panel.endTimeBox.getSelectedItem())) {
+            if (Objects.equals(panel.startTimeBox.getSelectedItem(), panel.endTimeBox.getSelectedItem())) {
                 Errors.showError(frame, Errors.APPLIANCE_TIME_ERROR);
                 return false;
             }

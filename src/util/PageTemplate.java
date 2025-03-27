@@ -1,41 +1,40 @@
 package util;
 
-import gui.HomePage;
-import services.DatabaseService;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.Set;
 
 public abstract class PageTemplate {
     protected JFrame frame;
+    private static final int FRAME_WIDTH = 1100;
+    private static final int FRAME_HEIGHT = 700;
+    private static final int DISTANCE = 20;
 
-    public PageTemplate(String title, int width, int height) {
-        validateDatabase();
-        frame = createFrame(title, width, height);
+    public PageTemplate(String title) {
+        frame = createFrame(title);
 
-        // Wrapper panel for centering content
-        JPanel wrapperPanel = createPanel(0, 0, new BorderLayout());
+
         JPanel headerPanel = createHeaderPanel();
         JPanel contentPanel = createContentPanel(); // Abstract method for custom content
+        JPanel footerPanel = createFooterPanel();
 
         if (headerPanel != null) {
-            wrapperPanel.add(headerPanel, BorderLayout.NORTH);
+            frame.add(headerPanel, BorderLayout.NORTH);
         }
-
         if (contentPanel != null) {
-            wrapperPanel.add(contentPanel, BorderLayout.CENTER);
+            frame.add(contentPanel, BorderLayout.CENTER);
+            createScroll(contentPanel);
+        }
+        if (footerPanel != null){
+            frame.add(footerPanel, BorderLayout.SOUTH); // Add to the bottom of the bodyPanel
         }
 
-        frame.add(wrapperPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
 
-    protected JFrame createFrame(String title, int width, int height) {
+    protected JFrame createFrame(String title) {
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width, height);
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setLayout(new BorderLayout());
         return frame;
     }
@@ -43,26 +42,7 @@ public abstract class PageTemplate {
     // Abstract method to be implemented by child classes
     protected abstract JPanel createContentPanel();
     protected abstract JPanel createHeaderPanel();
-
-    // Allow subclasses to define their layout
-    protected LayoutManager getDefaultLayout() {
-        return new GridBagLayout();
-    }
-
-    // Utility method for navigation
-    protected void navigateTo(PageTemplate newPage) {
-        frame.dispose();
-    }
-
-
-    private void validateDatabase() {
-        List<String> invalidEntries = DatabaseService.validateDatabase();
-        if (!invalidEntries.isEmpty()) {
-            String message = "The following entries are invalid:\n" + String.join("\n", invalidEntries);
-            JOptionPane.showMessageDialog(frame, message, "Invalid Database Entries", JOptionPane.ERROR_MESSAGE);
-            navigateTo(new HomePage());
-        }
-    }
+    protected abstract JPanel createFooterPanel();
 
     protected void createActionButton(String label, Runnable event, JPanel buttonContainer, Object position){
         JButton newButton = new JButton(label);
@@ -72,14 +52,8 @@ public abstract class PageTemplate {
 
     protected JComboBox<String> createDropdown(String[] options, String placeholder){
         JComboBox<String> newDropdown = new JComboBox<>(options);
-        PanelStatics.addPlaceholder(newDropdown, placeholder);
-        newDropdown.addActionListener(e -> {
-            String selectedOption = (String) newDropdown.getSelectedItem();
-            assert selectedOption != null;
-            if (selectedOption.equals(placeholder)) {
-                newDropdown.setSelectedIndex(0);
-            }
-        });
+        newDropdown.insertItemAt(placeholder,0);
+        newDropdown.setSelectedIndex(0);
         return newDropdown;
     }
 
@@ -91,11 +65,8 @@ public abstract class PageTemplate {
         return inputField;
     }
 
-    protected JPanel createPanel(int width, int height, LayoutManager layout) {
+    protected JPanel createPanel(LayoutManager layout) {
         JPanel panel = new JPanel();
-        if (width > 0 && height > 0) {
-            panel.setPreferredSize(new Dimension(width, height));
-        }
 
         if (layout != null) {
             panel.setLayout(layout);
@@ -104,18 +75,14 @@ public abstract class PageTemplate {
         return panel;
     }
 
-    protected void removePanelFromFrame(JPanel panel) {}
-
-    protected void addPanelToFrame(JPanel panel, String position) {
-        frame.add(panel, position);
-        frame.revalidate();
-        frame.repaint();
-    }
-
     private void createScroll(JPanel panel) {
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         this.frame.add(scrollPane, BorderLayout.CENTER);
+    }
+
+    protected void createVerticalSpacing(JPanel panel) {
+        panel.add(Box.createVerticalStrut(DISTANCE));
     }
 }

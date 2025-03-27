@@ -31,6 +31,7 @@ public enum EnergyLabel implements EnumTemplate {
         this.efficiencyFactor = efficiencyFactor;
         this.caption = caption;
     }
+
     @Override
     public String getCaption() {
         return this.caption;
@@ -43,14 +44,6 @@ public enum EnergyLabel implements EnumTemplate {
     }
     public static EnergyLabel getEnumByCaption(String caption) {
         return EnumTemplate.getEnumByCaption(LOOKUP_MAP, caption);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(EnergyLabel.getAllEnumCaptions());
-        EnergyLabel el = EnergyLabel.getEnumByCaption("A++");
-        System.out.println(el.caption);
-        System.out.println(el.getEfficiencyFactor());
-        EnergyLabel a = EnergyLabel.C;
     }
 
 
