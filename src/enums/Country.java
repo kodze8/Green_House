@@ -45,8 +45,4 @@ public enum Country implements EnumTemplate {
         return EnumTemplate.getEnumByCaption(LOOKUP_MAP, caption);
     }
 
-    public static void main(String[] args) {
-        System.out.println("Available Country Captions: " + Country.getAllEnumCaptions());
-        Country country = Country.getEnumByCaption("Poland");
-    }
 }

@@ -9,6 +9,7 @@ import util.Handler;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,14 +32,14 @@ public class ApplianceHandler implements Handler {
         if (validate()) {
             return parse();
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
 
     @Override
     public List<ApplianceUsage> parse() {
         if(country==null)
-            return null;
+            return Collections.emptyList();
         List<ApplianceUsage> applianceUsages = new ArrayList<>();
         for (AppliancePanel panel : appliancePanelList) {
             String name = Objects.requireNonNull(panel.nameBox.getSelectedItem()).toString();
