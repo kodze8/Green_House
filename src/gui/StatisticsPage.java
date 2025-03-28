@@ -33,7 +33,7 @@ public class StatisticsPage {
         roomComboBox.addActionListener(e -> {
             String selectedRoom = (String) roomComboBox.getSelectedItem();
             List<ApplianceUsage> filteredAppliances = HouseholdService.filterAppliancesByRoom(household, selectedRoom);
-            displaySortedAppliances(statisticsFrame, filteredAppliances);
+            displaySortedAppliances(filteredAppliances);
         });
 
         controlPanel.add(roomComboBox);
@@ -56,12 +56,12 @@ public class StatisticsPage {
                         .collect(Collectors.toList());
             }
 
-            displaySortedAppliances(statisticsFrame, sortedAppliances);
+            displaySortedAppliances(sortedAppliances);
         });
 
         controlPanel.add(sortByCarbonFootprintButton);
 
-        JLabel flightConversionLabel = new JLabel("Your yearly carbon footprint is equal to " + household.flightConversion() +" flights from Amsterdam to Paris!");
+        JLabel flightConversionLabel = new JLabel("Your yearly carbon footprint is equal to " + household.flightConversion(household.getCarbonFootPrint()) +" flights from Amsterdam to Paris!");
         statisticsFrame.add(flightConversionLabel);
 
         statisticsFrame.add(controlPanel);
@@ -70,7 +70,7 @@ public class StatisticsPage {
     }
 
     private static void populateRoomComboBox(Household household, JComboBox<String> roomComboBox) {
-        Set<String> roomTypes = HouseholdService.getSelectedRoom(household);
+        Set<String> roomTypes = HouseholdService.getSelectedRooms(household);
 
         roomComboBox.addItem("All rooms");
         for (String roomType : roomTypes) {
@@ -79,7 +79,7 @@ public class StatisticsPage {
     }
 
 
-    private static void displaySortedAppliances(JFrame statisticsFrame, List<ApplianceUsage> sortedAppliances) {
+    private static void displaySortedAppliances(List<ApplianceUsage> sortedAppliances) {
         displayPanel.removeAll();
 
         for (ApplianceUsage applianceUsage : sortedAppliances) {

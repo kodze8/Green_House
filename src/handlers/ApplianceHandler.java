@@ -1,4 +1,4 @@
-package controllers;
+package handlers;
 
 import domain.Appliance;
 import enums.ApplianceType;

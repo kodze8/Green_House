@@ -1,8 +1,7 @@
 package gui;
 
-import controllers.ApplianceHandler;
+import handlers.ApplianceHandler;
 import enums.ApplianceType;
-import util.DialogTemplate;
 
 import javax.swing.*;
 

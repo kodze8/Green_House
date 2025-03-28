@@ -1,12 +1,10 @@
-package controllers;
+package handlers;
 import enums.Country;
-import util.Errors;
-import util.Handler;
 
 import javax.swing.*;
 import java.util.Objects;
 
-public class CountryHandler implements Handler {
+public class CountryHandler implements Handler<Country> {
     private final JFrame frame;
     JComboBox<String> countryBox;
     public CountryHandler(JComboBox<String> countryBox, JFrame frame){

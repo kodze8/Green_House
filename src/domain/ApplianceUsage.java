@@ -1,6 +1,5 @@
 package domain;
-import controllers.ApplianceHandler;
-import controllers.ApplianceUsageHandler;
+import handlers.ApplianceHandler;
 import services.CarbonIntensityService;
 import enums.Country;
 
@@ -77,9 +76,7 @@ public class ApplianceUsage {
     public int getTimeRange(){
         return this.endTime-this.startTime+1;
     }
-    public boolean getUsageMode(){
-        return this.alwaysOn;
-    }
+
     public int getCarbonFootprint(){
         return this.carbonFootprint;
     }

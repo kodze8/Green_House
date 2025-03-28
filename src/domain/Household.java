@@ -3,7 +3,6 @@ import enums.Country;
 import enums.EnergyLabel;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /* Singleton
@@ -29,7 +28,7 @@ public class Household {
     public static Household getHouseholdInstance(Country country, EnergyLabel energyLabel){
         if (household==null){
             household = new Household(country, energyLabel);
-        }else {
+        } else {
             household.resetAttributes(country, energyLabel);
         }
         return household;
@@ -37,43 +36,25 @@ public class Household {
 
 
     private void resetAttributes(Country country, EnergyLabel energyLabel){
-        setCountry(country);
-        setEnergyLabel(energyLabel);
+        this.country = country;
+        this.energyLabel = energyLabel;
         this.appliances = new ArrayList<>();
     }
+
     public void addAppliance(ApplianceUsage applianceUsage) {
         if (applianceUsage != null) {
             this.appliances.add(applianceUsage);
         }
     }
 
-    public void setCountry(Country newCountry){
-        this.country = newCountry;
-    }
-    public void setEnergyLabel(EnergyLabel energyLabel){
-        this.energyLabel = energyLabel;
-    }
-
-    public void setAppliances(List<ApplianceUsage> appliances){
-        this.appliances = appliances;
-    }
-
-    public EnergyLabel getEnergyLabel(){
-        return this.energyLabel;
-    }
-
-    public void removeAppliance(ApplianceUsage applianceUsage){
-        this.appliances.remove(applianceUsage);
-    }
-
-    public int flightConversion() {
-        double conversion = (double) (getCarbonFootPrint() * 365) / FLIGHT;
+    public int flightConversion(int carbonFootPrint) {
+        double conversion = (double) (carbonFootPrint * 365) / FLIGHT;
         return (int) (Math.floor(conversion * 100) / 100); //round on 2 decimals
     }
 
-    public int energyLabelConversion(){
+    public int energyLabelConversion(int carbonFootprint){
         double efficiencyFactor = energyLabel.getEfficiencyFactor();
-        return (int) (this.getCarbonFootPrint() * efficiencyFactor);
+        return (int) (carbonFootprint * efficiencyFactor);
     }
 
     public int getCarbonFootPrint(){

@@ -1,233 +1,44 @@
 package gui;
 
-import controllers.ApplianceHandler;
-import enums.ApplianceType;
-import services.DatabaseService;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+public class ApplianceDatabasePage extends PageTemplate {
 
-
-public class ApplianceDatabasePage {
-    JFrame frame;
-    ApplianceType selectedType;
-    static Set<String> applianceTypeOptions;
-    static {applianceTypeOptions = ApplianceType.getAllEnumCaptions();}
-
-    public ApplianceDatabasePage(){
-        this.frame = new JFrame("Update Appliance Database");
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setSize(new Dimension(500,500));
-        this.frame.setLayout(new BorderLayout());
-
-        JButton menu = new JButton();
-        menu.setText("Menu");
-        menu.addActionListener(e -> {
-            frame.dispose();
-            new HomePage();
-
-        });
-        this.frame.add(menu, BorderLayout.NORTH);
-
-        JPanel buttonContainer = getJPanel();
-
-        this.frame.add(buttonContainer, BorderLayout.CENTER);
-        this.frame.setVisible(true);
+    public ApplianceDatabasePage() {
+        super("Update Appliance Database");
     }
 
-    private JPanel getJPanel() {
-        JPanel buttonContainer = new JPanel();
-        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.Y_AXIS));
-        buttonContainer.setPreferredSize(new Dimension(200, 100));
+    @Override
+    protected JPanel createContentPanel() {
+        JPanel buttonContainer = createPanel(new FlowLayout(FlowLayout.CENTER));
 
-        // Add appliance
-        JButton addDB = new JButton("Add Appliance");
-        addDB.addActionListener(e -> openAddApplianceDialog());
-        buttonContainer.add(addDB);
+        // Action buttons
+        createActionButton("Add Appliance", () -> new AddApplianceDialog(frame), buttonContainer, null);
+        createVerticalSpacing(buttonContainer);
+        createActionButton("Delete Appliance", () -> new DeleteApplianceDialog(frame), buttonContainer, null);
+        createVerticalSpacing(buttonContainer);
+        createActionButton("Update Appliance", () -> new UpdateApplianceDialog(frame), buttonContainer, null);
 
-        // delete appliance
-        JButton deleteDB = new JButton("Delete Appliance");
-        deleteDB.addActionListener(e -> openDeleteApplianceDialog());
-        buttonContainer.add(deleteDB);
-
-        //update appliance
-        JButton updateDB = new JButton("Update Appliance");
-        updateDB.addActionListener(e -> openUpdateApplianceDialog());
-        buttonContainer.add(updateDB);
         return buttonContainer;
     }
 
-    private void openAddApplianceDialog() {
-        JDialog dialog = new JDialog(frame, "Add Appliance", true);
-        dialog.setLayout(new GridLayout(5, 2));
-        dialog.setSize(600, 300);
+    @Override
+    protected JPanel createHeaderPanel() {
+        JPanel headerPanel = createPanel(new BorderLayout());
 
+        JLabel title = new JLabel("Database Configuration", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 16));
+        headerPanel.add(title, BorderLayout.CENTER);
+        createActionButton("< Back", () -> frame.dispose(), headerPanel, BorderLayout.WEST);
 
-        JTextField nameField = new JTextField();
-        JComboBox<String> typeField = new JComboBox<>(ApplianceType.getAllEnumCaptions().toArray(new String[0]));
-        JTextField powerConsumptionField = new JTextField();
-        JTextField embodiedEmissionsField = new JTextField();
-
-
-        dialog.add(new JLabel("Name:"));
-        dialog.add(nameField);
-        dialog.add(new JLabel("Appliance Type:"));
-        dialog.add(typeField);
-        dialog.add(new JLabel("Power Consumption (kWh):"));
-        dialog.add(powerConsumptionField);
-        dialog.add(new JLabel("Embodied Emissions (kgCO2e):"));
-        dialog.add(embodiedEmissionsField);
-
-        JButton addButton = new JButton("Add");
-
-        addButton.addActionListener(e -> {
-            String name = nameField.getText();
-            String selectedTypeCaption = (String) typeField.getSelectedItem();
-            ApplianceType type = ApplianceType.getEnumByCaption(selectedTypeCaption);
-            float powerConsumption = Float.parseFloat(powerConsumptionField.getText());
-            int embodiedEmissions = Integer.parseInt(embodiedEmissionsField.getText());
-
-            if (ApplianceHandler.addAppliance(name, type, powerConsumption, embodiedEmissions)) {
-                JOptionPane.showMessageDialog(dialog, "Appliance added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-            else {
-                JOptionPane.showMessageDialog(dialog, "Add appliance failed.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            dialog.dispose();
-        });
-
-        dialog.add(addButton);
-        dialog.setVisible(true);
+        return headerPanel;
     }
 
-    private void openDeleteApplianceDialog() {
-        JDialog dialog = new JDialog(frame, "Delete Appliance", true);
-        dialog.setLayout(new GridLayout(3, 2));
-        dialog.setSize(300, 150);
-
-        JComboBox<String> typeField = new JComboBox<>(ApplianceType.getAllEnumCaptions().toArray(new String[0]));
-        JComboBox<String> nameField = new JComboBox<>();
-
-        dialog.add(new JLabel("Appliance Type:"));
-        dialog.add(typeField);
-        dialog.add(new JLabel("Appliance Name:"));
-        dialog.add(nameField);
-
-        typeField.addActionListener(e -> {
-            String selectedTypeCaption = (String) typeField.getSelectedItem();
-            ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
-            nameField.removeAllItems();
-
-            Map<ApplianceType, List<String>> applianceMap = ApplianceHandler.getApplianceList();
-
-
-            if (applianceMap != null && applianceMap.containsKey(selectedType)) {
-                List<String> applianceNames = applianceMap.get(selectedType);
-                if (applianceNames != null) {
-                    for (String name : applianceNames) {
-                        nameField.addItem(name);
-                    }
-                }
-            }
-        });
-
-        JButton deleteButton = new JButton("Delete");
-        deleteButton.addActionListener(e -> {
-            String selectedName = (String) nameField.getSelectedItem();
-            if (selectedName != null) {
-                if (ApplianceHandler.deleteAppliance(selectedName)) {
-                    JOptionPane.showMessageDialog(dialog, "Appliance deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "Delete appliance failed.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                dialog.dispose();
-            }
-        });
-
-        dialog.add(deleteButton);
-        dialog.setVisible(true);
+    @Override
+    protected JPanel createFooterPanel() {
+        return null;
     }
 
-    private void openUpdateApplianceDialog() {
-        JDialog dialog = new JDialog(frame, "Update Appliance", true);
-        dialog.setLayout(new GridLayout(6, 2));
-        dialog.setSize(600, 300);
 
-        JComboBox<String> typeField = new JComboBox<>(ApplianceType.getAllEnumCaptions().toArray(new String[0]));
-        JComboBox<String> nameField = new JComboBox<>();
-        JTextField powerConsumptionField = new JTextField();
-        JTextField embodiedEmissionsField = new JTextField();
-
-        dialog.add(new JLabel("Appliance Type:"));
-        dialog.add(typeField);
-        dialog.add(new JLabel("Appliance Name:"));
-        dialog.add(nameField);
-        dialog.add(new JLabel("Power Consumption (kWh):"));
-        dialog.add(powerConsumptionField);
-        dialog.add(new JLabel("Embodied Emissions (kgCO2e):"));
-        dialog.add(embodiedEmissionsField);
-
-        typeField.addActionListener(e -> {
-            String selectedTypeCaption = (String) typeField.getSelectedItem();
-            ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
-            nameField.removeAllItems();
-
-            Map<ApplianceType, List<String>> applianceMap = ApplianceHandler.getApplianceList();
-
-
-            if (applianceMap != null && applianceMap.containsKey(selectedType)) {
-                List<String> applianceNames = applianceMap.get(selectedType);
-                if (applianceNames != null) {
-                    for (String name : applianceNames) {
-                        nameField.addItem(name);
-                    }
-                }
-            }
-        });
-
-
-        JButton updateButton = new JButton("Update");
-        updateButton.addActionListener(e -> {
-            String selectedName = (String) nameField.getSelectedItem();
-            String selectedTypeCaption = (String) typeField.getSelectedItem();
-            ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
-
-            if (selectedName != null && selectedType != null) {
-                float powerConsumption = Float.parseFloat(powerConsumptionField.getText());
-                int embodiedEmissions = Integer.parseInt(embodiedEmissionsField.getText());
-
-                if (ApplianceHandler.updateAppliance(selectedName, selectedType, powerConsumption, embodiedEmissions)) {
-                    JOptionPane.showMessageDialog(dialog, "Appliance updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "Update appliance failed.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                dialog.dispose();
-            } else {
-                JOptionPane.showMessageDialog(dialog, "Please select a valid appliance type.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-
-        dialog.dispose();
-
-        dialog.add(updateButton);
-        dialog.setVisible(true);
-
-    }
 }
-
-
-//List<String> invalidEntries = DatabaseService.validateDatabase();
-////show popup with invalid entries if they exist
-//            if (!invalidEntries.isEmpty()) {
-//StringBuilder message = new StringBuilder("The following entries are invalid:\n");
-//
-//                for (String entry : invalidEntries) {
-//        message.append(entry).append("\n");
-//                }
-//                        JOptionPane.showMessageDialog(frame, message.toString(), "Invalid Database Entries", JOptionPane.ERROR_MESSAGE);
-//        }

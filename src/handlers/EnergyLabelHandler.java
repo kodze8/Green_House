@@ -1,12 +1,10 @@
-package controllers;
+package handlers;
 import enums.*;
-import util.Errors;
-import util.Handler;
 
 import javax.swing.*;
 import java.util.Objects;
 
-public class EnergyLabelHandler implements Handler {
+public class EnergyLabelHandler implements Handler<EnergyLabel> {
     JComboBox<String> energyLabelBox;
     private final JFrame frame;
     public EnergyLabelHandler(JComboBox<String> energyLabelBox, JFrame frame){

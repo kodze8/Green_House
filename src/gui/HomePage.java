@@ -1,7 +1,6 @@
 package gui;
 
 import services.DatabaseService;
-import util.PageTemplate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,9 +27,9 @@ public class HomePage extends PageTemplate {
     protected JPanel createContentPanel() {
         JPanel buttonContainer = createPanel(new FlowLayout(FlowLayout.CENTER));
 
-        createActionButton("Update Database", ApplianceDatabasePage2::new, buttonContainer, null);
+        createActionButton("Update Database", ApplianceDatabasePage::new, buttonContainer, null);
         createVerticalSpacing(buttonContainer);
-        createActionButton("Configure Household", HouseholdConfigurationPage2::new, buttonContainer, null);
+        createActionButton("Configure Household", HouseholdConfigurationPage::new, buttonContainer, null);
 
         return buttonContainer;
     }

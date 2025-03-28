@@ -1,8 +1,7 @@
 package gui;
 
-import controllers.ApplianceHandler;
+import handlers.ApplianceHandler;
 import enums.ApplianceType;
-import util.DialogTemplate;
 
 import javax.swing.*;
 import java.util.Map;
@@ -49,7 +48,6 @@ public class DeleteApplianceDialog extends DialogTemplate {
         ApplianceType selectedType = ApplianceType.getEnumByCaption((String) typeField.getSelectedItem());
         Map<ApplianceType, List<String>> applianceMap = ApplianceHandler.getApplianceList();
 
-        assert applianceMap != null;
         if (applianceMap.containsKey(selectedType)) {
             for (String name : applianceMap.get(selectedType)) {
                 nameField.addItem(name);

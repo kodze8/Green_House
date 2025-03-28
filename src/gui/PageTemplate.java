@@ -1,4 +1,4 @@
-package util;
+package gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,21 +57,12 @@ public abstract class PageTemplate {
         return newDropdown;
     }
 
-    protected JTextField createInputField(String label, JPanel inputContainer){
-        JTextField inputField = new JTextField();
-        JLabel newLabel = new JLabel(label);
-        inputContainer.add(newLabel);
-        inputContainer.add(inputField);
-        return inputField;
-    }
-
     protected JPanel createPanel(LayoutManager layout) {
         JPanel panel = new JPanel();
 
         if (layout != null) {
             panel.setLayout(layout);
         }
-
         return panel;
     }
 

@@ -1,12 +1,9 @@
-package controllers;
+package handlers;
 
-import domain.Appliance;
 import domain.ApplianceUsage;
 import enums.Country;
 import enums.Room;
 import gui.AppliancePanel;
-import util.Errors;
-import util.Handler;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class ApplianceUsageHandler implements Handler {
+public class ApplianceUsageHandler implements Handler<List<ApplianceUsage>> {
     private final List<AppliancePanel> appliancePanelList;
     private final JFrame frame;
     private Country country;

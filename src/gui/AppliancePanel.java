@@ -1,13 +1,11 @@
 package gui;
 
-import controllers.ApplianceHandler;
+import handlers.ApplianceHandler;
 import enums.ApplianceType;
 import enums.Room;
-import util.PanelStatics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Set;
@@ -30,7 +28,7 @@ public class AppliancePanel {
         TIME_MAP = new HashMap<>();
         timeOptions = new String[24];
         for (int h = 0; h < 24; h++) {
-            String temp =  String.format("%02d:00", h);;
+            String temp = String.format("%02d:00", h);
             timeOptions[h] = temp;
             TIME_MAP.put(temp, h);
         }
@@ -51,18 +49,14 @@ public class AppliancePanel {
         this.panel.setBackground(Color.RED);
         this.panel.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
-        // Initialize dropdown options for time (rounded hours)
-
-
         // Initialization
         this.typeBox = new JComboBox<>(applianceTypeOptions.toArray(new String[0]));
         this.nameBox = new JComboBox<>();
         this.nameBox.setEnabled(false);
         this.roomBox = new JComboBox<>(roomOptions.toArray(new String[0]));
-        PanelStatics.addPlaceholder( this.typeBox, "Select Type");
-        PanelStatics.addPlaceholder( this.nameBox, "Select Model");
-        PanelStatics.addPlaceholder( this.roomBox, "Select Room");
-
+        addPlaceholder(this.typeBox, "Select Type");
+        addPlaceholder(this.nameBox, "Select Model");
+        addPlaceholder(this.roomBox, "Select Room");
 
         this.startTimeBox = new JComboBox<>(timeOptions);
         this.endTimeBox = new JComboBox<>(timeOptions);
@@ -79,18 +73,15 @@ public class AppliancePanel {
         this.panel.add(endTimeBox);
         this.panel.add(deleteButton);
 
-        typeBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateApplianceNameOptions();
-                nameBox.setEnabled(true);
-                nameBox.removeAllItems();
-                for (String name : applianceNameOptions) {
-                    nameBox.addItem(name);
-                }
-                PanelStatics.addPlaceholder(nameBox, "Select Model");
-
+        typeBox.addActionListener(e -> {
+            updateApplianceNameOptions();
+            nameBox.setEnabled(true);
+            nameBox.removeAllItems();
+            for (String name : applianceNameOptions) {
+                nameBox.addItem(name);
             }
+            addPlaceholder(nameBox, "Select Model");
+
         });
 
         this.alwaysOn.addActionListener(e -> {
@@ -110,8 +101,12 @@ public class AppliancePanel {
 
     private void updateApplianceNameOptions() {
         String selectedType = (String) typeBox.getSelectedItem();
-        ApplianceType applianceType = ApplianceType.getEnumByCaption(selectedType);
-        applianceNameOptions = ApplianceHandler.getApplianceList().get(applianceType).toArray(new String[0]);
+        if ("Select Type".equals(selectedType)){
+            applianceNameOptions = new String[0];
+        } else {
+            ApplianceType applianceType = ApplianceType.getEnumByCaption(selectedType);
+            applianceNameOptions = ApplianceHandler.getApplianceList().get(applianceType).toArray(new String[0]);
+        }
     }
 
     public void cleanup() {
@@ -132,7 +127,8 @@ public class AppliancePanel {
         this.endTimeBox.setPreferredSize(new Dimension(80, 30));
     }
 
-    public static void main(String[] args) {
-        System.out.println(TIME_MAP);
+    private static void addPlaceholder(JComboBox<String> jComboBox, String placeHolder) {
+        jComboBox.insertItemAt(placeHolder, 0);
+        jComboBox.setSelectedIndex(0);
     }
 }
