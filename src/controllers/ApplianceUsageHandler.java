@@ -1,6 +1,5 @@
 package controllers;
 
-import domain.Appliance;
 import domain.ApplianceUsage;
 import enums.Country;
 import enums.Room;

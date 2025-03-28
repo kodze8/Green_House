@@ -17,22 +17,22 @@ public class HouseholdService {
     private static Household household;
     private final CountryHandler countryHandler;
     private final EnergyLabelHandler energyLabelHandler;
-    private final ApplianceUsageHandler ApplianceUsageHandler;
+    private final ApplianceUsageHandler applianceUsageHandler;
 
     public HouseholdService(List<AppliancePanel> appliancePanelList, JComboBox<String> countryBox, JComboBox<String> energyLabelBox, JFrame frame) {
         this.countryHandler = new CountryHandler(countryBox,frame);
         this.energyLabelHandler = new EnergyLabelHandler(energyLabelBox, frame);
-        this.ApplianceUsageHandler = new ApplianceUsageHandler(appliancePanelList, frame);
+        this.applianceUsageHandler = new ApplianceUsageHandler(appliancePanelList, frame);
     }
 
     public void updateHousehold() {
         household = null;
 
         Country country =  countryHandler.handle();
-        ApplianceUsageHandler.setCountry(country);
+        applianceUsageHandler.setCountry(country);
 
         EnergyLabel energyLabel = energyLabelHandler.handle();
-        List<ApplianceUsage> appliances = ApplianceUsageHandler.handle();
+        List<ApplianceUsage> appliances = applianceUsageHandler.handle();
 
         if (country==null || energyLabel==null || appliances==null || appliances.isEmpty())
             return;
