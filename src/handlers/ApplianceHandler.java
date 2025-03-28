@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import services.DatabaseService;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -95,9 +96,28 @@ public class ApplianceHandler {
     }
 
     public static boolean deleteAppliance(String name) {
-        return DatabaseService.deleteAppliance(name);
+        JSONObject applianceToDelete = DatabaseService.retrieveObject(name);
+        if (applianceToDelete == null) {
+            return false;
+        }
+
+        JSONArray jsonArray = DatabaseService.readDB();
+        if (jsonArray == null) {
+            return false;
+        }
+
+        else {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject appliance = jsonArray.getJSONObject(i);
+                if (appliance.getString("name").equals(name)) {
+                    jsonArray.remove(i);
+                    break;
+                }
+            }
+            return DatabaseService.writeDB(jsonArray);
+        }
     }
 
 }
-//appliance handler
+
 
