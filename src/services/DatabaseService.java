@@ -20,13 +20,13 @@ public class DatabaseService {
     static String dbPath = "src/data/appliance_db.json";
 
     public static class DataBaseType{
-        static final String NAME = "name";
-        static final String POWER_CONSUMPTION = "power_consumption_kwh";
-        static final String TYPE = "type";
-        static final String EMBODIED_EMISSION = "embodied_emissions_kgCO2e";
+        public static final String NAME = "name";
+        public static final String POWER_CONSUMPTION = "power_consumption_kwh";
+        public static final String TYPE = "type";
+        public static final String EMBODIED_EMISSION = "embodied_emissions_kgCO2e";
     }
 
-    static boolean validateInput(JSONObject appliance) {
+    public static boolean validateInput(JSONObject appliance) {
         return (!invalidName(appliance) && !invalidType(appliance) && !invalidEmissions(appliance) && !invalidPowerConsumption(appliance));
     }
 
@@ -82,7 +82,7 @@ public class DatabaseService {
     }
 
 
-    static JSONArray readDB(){
+    public static JSONArray readDB(){
         try {
             FileReader reader = new FileReader(dbPath);
             JSONArray jsonArray = new JSONArray(new JSONTokener(reader));
@@ -95,7 +95,7 @@ public class DatabaseService {
         }
     }
 
-    static boolean writeDB(JSONArray jsonArray){
+    public static boolean writeDB(JSONArray jsonArray){
         try {
             FileWriter fileWriter = new FileWriter(dbPath);
             fileWriter.write(jsonArray.toString(4));
@@ -124,7 +124,7 @@ public class DatabaseService {
         }
         return null;
     }
-    static boolean deleteAppliance(String name) {
+    public static boolean deleteAppliance(String name) {
         JSONObject applianceToDelete = retrieveObject(name);
         if (applianceToDelete == null) {
             return false;

@@ -1,7 +1,7 @@
 package gui;
 
+import controllers.ApplianceHandler;
 import enums.ApplianceType;
-import services.ApplianceService;
 import util.DialogTemplate;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class DeleteApplianceDialog extends DialogTemplate {
     @Override
     protected void onConfirm() {
         String selectedName = (String) nameField.getSelectedItem();
-        if (selectedName != null && ApplianceService.deleteAppliance(selectedName)) {
+        if (selectedName != null && ApplianceHandler.deleteAppliance(selectedName)) {
             JOptionPane.showMessageDialog(this, "Appliance deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         } else {
@@ -47,7 +47,7 @@ public class DeleteApplianceDialog extends DialogTemplate {
     private void updateApplianceDropdown() {
         nameField.removeAllItems();
         ApplianceType selectedType = ApplianceType.getEnumByCaption((String) typeField.getSelectedItem());
-        Map<ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+        Map<ApplianceType, List<String>> applianceMap = ApplianceHandler.getApplianceList();
 
         assert applianceMap != null;
         if (applianceMap.containsKey(selectedType)) {

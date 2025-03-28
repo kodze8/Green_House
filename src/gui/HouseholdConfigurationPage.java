@@ -1,9 +1,9 @@
 package gui;
 
 import enums.Country;
-import controllers.HouseholdController;
 import enums.EnergyLabel;
 import domain.Household;
+import services.HouseholdService;
 import util.PanelStatics;
 
 import javax.swing.*;
@@ -159,8 +159,9 @@ public class HouseholdConfigurationPage {
     }
 
     private Household createHousehold(){
-        HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox, this.frame);
-        return householdController.getHousehold();
+        HouseholdService householdService = new HouseholdService(this.appliancePanels, this.countryBox, this.energyLabelBox, this.frame);
+        // HouseholdService.getHousehold();
+        return null;
     }
     private void handleButtonClick(Consumer<Household> nextStep) {
         Household household = createHousehold();

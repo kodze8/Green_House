@@ -1,7 +1,7 @@
 package gui;
 
 import enums.Country;
-import controllers.HouseholdController;
+import services.HouseholdService;
 import enums.EnergyLabel;
 import domain.Household;
 import util.PageTemplate;
@@ -100,8 +100,8 @@ public class HouseholdConfigurationPage2 extends PageTemplate {
     }
 
     private Household createHousehold() {
-        HouseholdController householdController = new HouseholdController(this.appliancePanels, this.countryBox, this.energyLabelBox, this.frame);
-        return householdController.getHousehold();
+        HouseholdService householdService = new HouseholdService(this.appliancePanels, this.countryBox, this.energyLabelBox, this.frame);
+        return householdService.getHousehold();
     }
 
     private void handleButtonClick(Consumer<Household> nextStep) {

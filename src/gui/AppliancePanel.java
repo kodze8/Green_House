@@ -1,7 +1,7 @@
 package gui;
 
+import controllers.ApplianceHandler;
 import enums.ApplianceType;
-import services.ApplianceService;
 import enums.Room;
 import util.PanelStatics;
 
@@ -111,7 +111,7 @@ public class AppliancePanel {
     private void updateApplianceNameOptions() {
         String selectedType = (String) typeBox.getSelectedItem();
         ApplianceType applianceType = ApplianceType.getEnumByCaption(selectedType);
-        applianceNameOptions = ApplianceService.getApplianceList().get(applianceType).toArray(new String[0]);
+        applianceNameOptions = ApplianceHandler.getApplianceList().get(applianceType).toArray(new String[0]);
     }
 
     public void cleanup() {

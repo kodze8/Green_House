@@ -1,7 +1,7 @@
 package gui;
 
+import controllers.ApplianceHandler;
 import enums.ApplianceType;
-import services.ApplianceService;
 import util.DialogTemplate;
 
 import javax.swing.*;
@@ -49,7 +49,7 @@ public class UpdateApplianceDialog extends DialogTemplate {
             float powerConsumption = Float.parseFloat(powerConsumptionField.getText());
             int embodiedEmissions = Integer.parseInt(embodiedEmissionsField.getText());
 
-            if (ApplianceService.updateAppliance(selectedName, selectedType, powerConsumption, embodiedEmissions)) {
+            if (ApplianceHandler.updateAppliance(selectedName, selectedType, powerConsumption, embodiedEmissions)) {
                 JOptionPane.showMessageDialog(this, "Appliance updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } else {
@@ -63,9 +63,8 @@ public class UpdateApplianceDialog extends DialogTemplate {
     private void updateApplianceDropdown() {
         nameField.removeAllItems();
         ApplianceType selectedType = ApplianceType.getEnumByCaption((String) typeField.getSelectedItem());
-        Map<ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+        Map<ApplianceType, List<String>> applianceMap = ApplianceHandler.getApplianceList();
 
-        assert applianceMap != null;
         if (applianceMap.containsKey(selectedType)) {
             for (String name : applianceMap.get(selectedType)) {
                 nameField.addItem(name);

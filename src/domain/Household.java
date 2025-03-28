@@ -66,20 +66,6 @@ public class Household {
         this.appliances.remove(applianceUsage);
     }
 
-    public List<ApplianceUsage> sortByCarbonFootprint() {
-        return sortAppliances(ApplianceUsage.COMPARE_BY_CARBON_FOOTPRINT);
-    }
-
-    public List<ApplianceUsage> sortByTime() {
-        return sortAppliances(ApplianceUsage.COMPARE_BY_TIME);
-    }
-
-    public static List<ApplianceUsage> sortAppliances(Comparator<ApplianceUsage> comparator) {
-        List<ApplianceUsage> sortedList = new ArrayList<>(household.appliances);
-        sortedList.sort(comparator);
-        return sortedList;
-    }
-
     public int flightConversion() {
         double conversion = (double) (getCarbonFootPrint() * 365) / FLIGHT;
         return (int) (Math.floor(conversion * 100) / 100); //round on 2 decimals
