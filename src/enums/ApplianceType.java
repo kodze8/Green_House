@@ -62,9 +62,4 @@ public enum ApplianceType implements EnumTemplate{
         return EnumTemplate.getEnumByCaption(LOOKUP_MAP, caption);
     }
 
-    public static void main(String[] args) {
-        System.out.println(ApplianceType.getAllEnumCaptions());
-        ApplianceType app1 = ApplianceType.getEnumByCaption("Hair Dryer");
-        System.out.println(app1.caption);
-    }
 }
