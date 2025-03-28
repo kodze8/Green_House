@@ -124,26 +124,5 @@ public class DatabaseService {
         }
         return null;
     }
-    public static boolean deleteAppliance(String name) {
-        JSONObject applianceToDelete = retrieveObject(name);
-        if (applianceToDelete == null) {
-            return false;
-        }
 
-        JSONArray jsonArray = readDB();
-        if (jsonArray == null) {
-            return false;
-        }
-
-        else {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject appliance = jsonArray.getJSONObject(i);
-                if (appliance.getString("name").equals(name)) {
-                    jsonArray.remove(i);
-                    break;
-                }
-            }
-            return writeDB(jsonArray);
-        }
-    }
 }
