@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class HouseholdService {
     private static Household household;
@@ -54,5 +56,16 @@ public class HouseholdService {
 
     public static List<ApplianceUsage> sortByCarbonFootprint() {
         return sortAppliances(ApplianceUsage.COMPARE_BY_CARBON_FOOTPRINT);
+    }
+
+    public static List<ApplianceUsage> filterAppliancesByRoom(Household household, String roomType) {
+        return household.getAppliances().stream()
+                .filter(applianceUsage -> applianceUsage.getRoom().getCaption().equals(roomType)).collect(Collectors.toList());
+    }
+
+    public static Set<String> getSelectedRoom(Household household) {
+        return household.getAppliances().stream()
+                .map(applianceUsage -> applianceUsage.getRoom().getCaption())
+                .collect(Collectors.toSet());
     }
 }
