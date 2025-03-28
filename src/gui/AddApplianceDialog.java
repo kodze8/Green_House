@@ -1,7 +1,7 @@
 package gui;
 
+import controllers.ApplianceHandler;
 import enums.ApplianceType;
-import services.ApplianceService;
 import util.DialogTemplate;
 
 import javax.swing.*;
@@ -45,7 +45,7 @@ public class AddApplianceDialog extends DialogTemplate {
             float power = Float.parseFloat(powerConsumptionField.getText());
             int emissions = Integer.parseInt(embodiedEmissionsField.getText());
 
-            if (ApplianceService.addAppliance(name, type, power, emissions)) {
+            if (ApplianceHandler.addAppliance(name, type, power, emissions)) {
                 JOptionPane.showMessageDialog(this, "Appliance added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } else {

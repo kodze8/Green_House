@@ -2,6 +2,7 @@ package gui;
 
 import domain.ApplianceUsage;
 import domain.Household;
+import services.HouseholdService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +47,7 @@ public class StatisticsPage {
 
             if ("All rooms".equals(selectedRoom)) {
                 // Sort all appliances if "Select Room" is chosen
-                sortedAppliances = household.sortByCarbonFootprint();
+                sortedAppliances = HouseholdService.sortByCarbonFootprint();
             } else {
                 // Filter appliances by the selected room and then sort
                 List<ApplianceUsage> filteredAppliances = filterAppliancesByRoom(household, selectedRoom);

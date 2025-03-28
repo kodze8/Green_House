@@ -1,7 +1,9 @@
 package domain;
+import controllers.ApplianceHandler;
+import controllers.ApplianceUsageHandler;
 import services.CarbonIntensityService;
 import enums.Country;
-import services.ApplianceService;
+
 import enums.Room;
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +42,7 @@ public class ApplianceUsage {
 
 
     public ApplianceUsage(String name, Room room, Country country, boolean alwaysOn, int start, int end) {
-        this.appliance = ApplianceService.retrieveAppliance(name);
+        this.appliance = ApplianceHandler.retrieveAppliance(name);
         this.room = room;
         this.alwaysOn = alwaysOn;
         this.startTime = alwaysOn ? 0 : start;
@@ -86,12 +88,8 @@ public class ApplianceUsage {
     }
 
     // Comparators
-    public static final Comparator<ApplianceUsage> COMPARE_BY_TIME =
-            (a1, a2) -> Integer.compare(a1.getTimeRange(), a2.getTimeRange());
     public static final Comparator<ApplianceUsage> COMPARE_BY_CARBON_FOOTPRINT =
             (a2, a1) -> Integer.compare(a1.getCarbonFootprint(), a2.getCarbonFootprint());
-    public static final Comparator<ApplianceUsage> COMPARE_BY_ROOM =
-            Comparator.comparing(a -> a.getRoom().getCaption());
 
     @Override
     public String toString(){

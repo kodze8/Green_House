@@ -1,78 +1,103 @@
 package controllers;
 
-import domain.ApplianceUsage;
-import enums.Country;
-import enums.Room;
-import gui.AppliancePanel;
-import util.Errors;
-import util.Handler;
+import domain.Appliance;
+import enums.ApplianceType;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import services.DatabaseService;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
-public class ApplianceHandler implements Handler {
-    private final List<AppliancePanel> appliancePanelList;
-    private final JFrame frame;
-    private Country country;
 
-    public ApplianceHandler(List<AppliancePanel> appliancePanelList, JFrame frame) {
-        this.appliancePanelList = appliancePanelList;
-        this.frame = frame;
+public class ApplianceHandler {
+
+    public static Appliance retrieveAppliance(String name) {
+        JSONObject object = DatabaseService.retrieveObject(name);
+
+        if (object != null) {
+            String applianceName = object.getString(DatabaseService.DataBaseType.NAME);
+            ApplianceType applianceType = ApplianceType.valueOf(object.getString(DatabaseService.DataBaseType.TYPE));
+            float appliancePC = (float)object.getDouble(DatabaseService.DataBaseType.POWER_CONSUMPTION);
+            int embodiedEmissions = object.getInt(DatabaseService.DataBaseType.EMBODIED_EMISSION);
+
+            return new Appliance(applianceName, applianceType, appliancePC, embodiedEmissions);
+        }
+        return null;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public static Map<ApplianceType, List<String>> getApplianceList() {
+        Map<ApplianceType, List<String>> applianceMap = new HashMap<>();
+
+        JSONArray jsonArray = DatabaseService.readDB();
+        if (jsonArray == null) {
+            return Collections.emptyMap();
+        }
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject appliance = jsonArray.getJSONObject(i);
+            String name = appliance.getString(DatabaseService.DataBaseType.NAME);
+            // In database String value are Enum Equivalent not Caption
+//            ApplianceType.getEnumByCaption("Refrigerator"); reference only. we use value of here not our function as database contains capital letter namings.
+            ApplianceType type = ApplianceType.valueOf(appliance.getString(DatabaseService.DataBaseType.TYPE));
+            applianceMap.putIfAbsent(type, new ArrayList<>());
+            applianceMap.get(type).add(name);
+        }
+
+        return applianceMap;
     }
 
-    @Override
-    public List<ApplianceUsage> handle() {
-        if (validate()) {
-            return parse();
-        } else {
-            return Collections.emptyList();
+    public static boolean addAppliance(String name, ApplianceType type, float powerConsumption, int embodiedEmissions) {
+        // Additional input validation can go here
+        JSONArray jsonArray = DatabaseService.readDB();
+        if (jsonArray == null) {
+            return false;
+        }
+        if (DatabaseService.retrieveObject(name) != null) {
+            return false;
+        }
+        JSONObject newApplianceJson = new JSONObject();
+        newApplianceJson.put(DatabaseService.DataBaseType.NAME, name);
+        newApplianceJson.put(DatabaseService.DataBaseType.TYPE, type.toString());
+        newApplianceJson.put(DatabaseService.DataBaseType.POWER_CONSUMPTION, powerConsumption);
+        newApplianceJson.put(DatabaseService.DataBaseType.EMBODIED_EMISSION, embodiedEmissions);
+
+        if(DatabaseService.validateInput(newApplianceJson)) {
+            jsonArray.put(newApplianceJson);
+            return DatabaseService.writeDB(jsonArray);
+        }
+        else {
+            return false;
         }
     }
 
-    @Override
-    public List<ApplianceUsage> parse() {
-        if(country==null)
-            return Collections.emptyList();
-        List<ApplianceUsage> applianceUsages = new ArrayList<>();
-        for (AppliancePanel panel : appliancePanelList) {
-            String name = Objects.requireNonNull(panel.nameBox.getSelectedItem()).toString();
-            Room room = Room.getEnumByCaption(Objects.requireNonNull(panel.roomBox.getSelectedItem()).toString());
-            boolean alwaysOn = panel.alwaysOn.isSelected();
-            int startTime = alwaysOn ? 0 : AppliancePanel.TIME_MAP.get(panel.startTimeBox.getSelectedItem());
-            int endTime = alwaysOn ? 23 : AppliancePanel.TIME_MAP.get(panel.endTimeBox.getSelectedItem());
-            applianceUsages.add(new ApplianceUsage(name, room, country, alwaysOn, startTime, endTime)); // Pass the country here
+    public static boolean updateAppliance(String name, ApplianceType type, float powerConsumption, int embodiedEmissions) {
+        JSONArray jsonArray = DatabaseService.readDB();
+        if (jsonArray == null) {
+            return false;
         }
-        if (applianceUsages.isEmpty()) Errors.showError(frame, Errors.APPLIANCE_EMPTY);
-        return applianceUsages;
+
+        boolean applianceFound = false;
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject appliance = jsonArray.getJSONObject(i);
+            if (appliance.getString(DatabaseService.DataBaseType.NAME).equals(name)) {
+                appliance.put(DatabaseService.DataBaseType.TYPE, type.toString());
+                appliance.put(DatabaseService.DataBaseType.POWER_CONSUMPTION, powerConsumption);
+                appliance.put(DatabaseService.DataBaseType.EMBODIED_EMISSION, embodiedEmissions);
+                applianceFound = true;
+                break;
+            }
+        }
+        return applianceFound && DatabaseService.writeDB(jsonArray);
     }
 
-    @Override
-    public boolean validate() {
-        for (AppliancePanel panel : this.appliancePanelList) {
-            if ("Select Type".equals(panel.typeBox.getSelectedItem())) {
-                Errors.showError(frame, Errors.APPLIANCE_TYPE_ERROR);
-                return false;
-            }
-            if ("Select Model".equals(panel.nameBox.getSelectedItem())) {
-                Errors.showError(frame, Errors.APPLIANCE_MODEL_ERROR);
-                return false;
-            }
-            if ("Select Room".equals(panel.roomBox.getSelectedItem())) {
-                Errors.showError(frame, Errors.APPLIANCE_ROOM_ERROR);
-                return false;
-            }
-            if (Objects.equals(panel.startTimeBox.getSelectedItem(), panel.endTimeBox.getSelectedItem())) {
-                Errors.showError(frame, Errors.APPLIANCE_TIME_ERROR);
-                return false;
-            }
-        }
-        return true;
+    public static boolean deleteAppliance(String name) {
+        return DatabaseService.deleteAppliance(name);
     }
+
 }
+//appliance handler
+

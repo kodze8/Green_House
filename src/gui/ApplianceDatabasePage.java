@@ -1,7 +1,7 @@
 package gui;
 
+import controllers.ApplianceHandler;
 import enums.ApplianceType;
-import services.ApplianceService;
 import services.DatabaseService;
 
 import javax.swing.*;
@@ -91,7 +91,7 @@ public class ApplianceDatabasePage {
             float powerConsumption = Float.parseFloat(powerConsumptionField.getText());
             int embodiedEmissions = Integer.parseInt(embodiedEmissionsField.getText());
 
-            if (ApplianceService.addAppliance(name, type, powerConsumption, embodiedEmissions)) {
+            if (ApplianceHandler.addAppliance(name, type, powerConsumption, embodiedEmissions)) {
                 JOptionPane.showMessageDialog(dialog, "Appliance added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
             else {
@@ -122,7 +122,7 @@ public class ApplianceDatabasePage {
             ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
             nameField.removeAllItems();
 
-            Map<ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+            Map<ApplianceType, List<String>> applianceMap = ApplianceHandler.getApplianceList();
 
 
             if (applianceMap != null && applianceMap.containsKey(selectedType)) {
@@ -139,7 +139,7 @@ public class ApplianceDatabasePage {
         deleteButton.addActionListener(e -> {
             String selectedName = (String) nameField.getSelectedItem();
             if (selectedName != null) {
-                if (ApplianceService.deleteAppliance(selectedName)) {
+                if (ApplianceHandler.deleteAppliance(selectedName)) {
                     JOptionPane.showMessageDialog(dialog, "Appliance deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(dialog, "Delete appliance failed.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -176,7 +176,7 @@ public class ApplianceDatabasePage {
             ApplianceType selectedType = ApplianceType.getEnumByCaption(selectedTypeCaption);
             nameField.removeAllItems();
 
-            Map<ApplianceType, List<String>> applianceMap = ApplianceService.getApplianceList();
+            Map<ApplianceType, List<String>> applianceMap = ApplianceHandler.getApplianceList();
 
 
             if (applianceMap != null && applianceMap.containsKey(selectedType)) {
@@ -200,7 +200,7 @@ public class ApplianceDatabasePage {
                 float powerConsumption = Float.parseFloat(powerConsumptionField.getText());
                 int embodiedEmissions = Integer.parseInt(embodiedEmissionsField.getText());
 
-                if (ApplianceService.updateAppliance(selectedName, selectedType, powerConsumption, embodiedEmissions)) {
+                if (ApplianceHandler.updateAppliance(selectedName, selectedType, powerConsumption, embodiedEmissions)) {
                     JOptionPane.showMessageDialog(dialog, "Appliance updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(dialog, "Update appliance failed.", "Error", JOptionPane.ERROR_MESSAGE);
