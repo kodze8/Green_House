@@ -15,7 +15,7 @@ public class StatisticsPage {
 
     static void openStatisticsWindow(Household household) {
         JFrame statisticsFrame = new JFrame("Statistics");
-        statisticsFrame.setSize(900, 600);
+        statisticsFrame.setSize(1100, 700);
         statisticsFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         statisticsFrame.setLayout(new BoxLayout(statisticsFrame.getContentPane(), BoxLayout.Y_AXIS));
 
@@ -24,7 +24,7 @@ public class StatisticsPage {
 
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Align to the left
-        controlPanel.setMaximumSize(new Dimension(900, 100));
+        controlPanel.setMaximumSize(new Dimension(1100, 100));
 
         JComboBox<String> roomComboBox = new JComboBox<>();
         roomComboBox.setMaximumSize(new Dimension(150, 30));
