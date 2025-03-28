@@ -37,16 +37,4 @@ public class CarbonIntensityService {
         return carbonIntensityValues;
     }
 
-
-    // Sample usage
-    public static void main(String[] args) {
-        String country = "Poland";
-        int startTime = 4;
-        int endTime = 21;
-
-        List<Integer> carbonIntensity = getCarbonIntensity(country, startTime, endTime);
-        System.out.println("Carbon Intensity for " + country + " from hour " + startTime + " to " + endTime + ":");
-        System.out.println(carbonIntensity);
-
-    }
 }

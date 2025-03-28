@@ -45,9 +45,4 @@ public enum Room implements EnumTemplate {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(Room.getAllEnumCaptions());
-        Room room = Room.getEnumByCaption("Basement");
-        System.out.println(room.caption);
-    }
 }

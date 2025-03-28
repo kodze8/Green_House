@@ -9,7 +9,7 @@ public abstract class PageTemplate {
     private static final int FRAME_HEIGHT = 700;
     private static final int DISTANCE = 20;
 
-    public PageTemplate(String title) {
+    protected PageTemplate(String title) {
         frame = createFrame(title);
 
 
@@ -32,11 +32,11 @@ public abstract class PageTemplate {
     }
 
     protected JFrame createFrame(String title) {
-        JFrame frame = new JFrame(title);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        frame.setLayout(new BorderLayout());
-        return frame;
+        JFrame cframe = new JFrame(title);
+        cframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        cframe.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        cframe.setLayout(new BorderLayout());
+        return cframe;
     }
 
     // Abstract method to be implemented by child classes
@@ -77,7 +77,7 @@ public abstract class PageTemplate {
 
     private void createScroll(JPanel panel) {
         JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         this.frame.add(scrollPane, BorderLayout.CENTER);
     }

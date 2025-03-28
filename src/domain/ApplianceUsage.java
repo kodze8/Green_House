@@ -29,13 +29,13 @@ import java.util.List;
 
 
 public class ApplianceUsage {
-    private Appliance appliance;
-    private int startTime;
-    private int endTime;
-    private List<Integer> carbonIntensity;
-    private Room room;
-    private int carbonFootprint;
-    private boolean alwaysOn;
+    private final Appliance appliance;
+    private final int startTime;
+    private final int endTime;
+    private final List<Integer> carbonIntensity;
+    private final Room room;
+    private final int carbonFootprint;
+    private final boolean alwaysOn;
     private static final double GRAMS_TO_KG_CONVERSION_FACTOR = 1000.0;
 
 

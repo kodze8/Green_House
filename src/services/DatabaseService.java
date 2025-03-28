@@ -11,10 +11,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static services.DatabaseService.DataBaseType.EMBODIED_EMISSION;
+import static services.DatabaseService.DataBaseType.POWER_CONSUMPTION;
+
 
 public class DatabaseService {
 
-    static String DB_PATH = "src/data/appliance_db.json";
+    static String dbPath = "src/data/appliance_db.json";
 
     public static class DataBaseType{
         static final String NAME = "name";
@@ -31,10 +34,10 @@ public class DatabaseService {
         return (!appliance.has("name") || !(appliance.get("name") instanceof String) || appliance.getString("name").trim().isEmpty());
     }
     private static boolean invalidPowerConsumption(JSONObject appliance) {
-        return (!appliance.has("power_consumption_kwh") || !(appliance.get("power_consumption_kwh") instanceof Number) || appliance.getDouble("power_consumption_kwh") <= 0);
+        return (!appliance.has(POWER_CONSUMPTION) || !(appliance.get(POWER_CONSUMPTION) instanceof Number) || appliance.getDouble(POWER_CONSUMPTION) <= 0);
     }
     private static boolean invalidEmissions(JSONObject appliance) {
-        return (!appliance.has("embodied_emissions_kgCO2e") || !(appliance.get("embodied_emissions_kgCO2e") instanceof Number) || appliance.getInt("embodied_emissions_kgCO2e") < 0);
+        return (!appliance.has(EMBODIED_EMISSION) || !(appliance.get(EMBODIED_EMISSION) instanceof Number) || appliance.getInt(EMBODIED_EMISSION) < 0);
     }
     private static boolean invalidType(JSONObject appliance) {
         return (!appliance.has("type") || isValidApplianceType(appliance.getString("type")));
@@ -81,7 +84,7 @@ public class DatabaseService {
 
     static JSONArray readDB(){
         try {
-            FileReader reader = new FileReader(DB_PATH);
+            FileReader reader = new FileReader(dbPath);
             JSONArray jsonArray = new JSONArray(new JSONTokener(reader));
             reader.close();
             return jsonArray;
@@ -94,7 +97,7 @@ public class DatabaseService {
 
     static boolean writeDB(JSONArray jsonArray){
         try {
-            FileWriter fileWriter = new FileWriter(DB_PATH);
+            FileWriter fileWriter = new FileWriter(dbPath);
             fileWriter.write(jsonArray.toString(4));
             fileWriter.close();
             return true;
@@ -113,11 +116,10 @@ public class DatabaseService {
         else {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject appliance = jsonArray.getJSONObject(i);
-                if (!invalidName(appliance)) {
-                    if (appliance.getString(DataBaseType.NAME).equals(name)) {
+                if (!invalidName(appliance) && appliance.getString(DataBaseType.NAME).equals(name)) {
                         return appliance; // Return the matching appliance
                     }
-                }
+
             }
         }
         return null;

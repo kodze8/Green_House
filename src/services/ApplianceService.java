@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class ApplianceService {
 
         JSONArray jsonArray = DatabaseService.readDB();
         if (jsonArray == null) {
-            return null;
+            return Collections.emptyMap();
         }
 
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -96,23 +97,5 @@ public class ApplianceService {
         return DatabaseService.deleteAppliance(name);
     }
 
-
-    public static void print(Map<ApplianceType, List<String>> map){
-        for (Map.Entry<ApplianceType, List<String>> entry: map.entrySet()){
-            System.out.print(entry.getKey());
-            System.out.print(entry.getValue());
-            System.out.println();
-        }
-
-    }
-
-
-    public static void main(String[] args) {
-        ApplianceType t = ApplianceType.BLENDER;
-        System.out.println(ApplianceService.getApplianceList().get(t));
-        System.out.println(ApplianceService.retrieveAppliance("Sony PlayStation 4 Gaming Console"));
-        System.out.println(DatabaseService.retrieveObject("Sony PlayStation 4 Gaming Console"));
-
-    }
 }
 

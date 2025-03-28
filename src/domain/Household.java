@@ -46,6 +46,7 @@ public class Household {
             this.appliances.add(applianceUsage);
         }
     }
+
     public void setCountry(Country newCountry){
         this.country = newCountry;
     }
