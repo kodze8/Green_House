@@ -32,7 +32,7 @@ public class StatisticsPage {
 
         roomComboBox.addActionListener(e -> {
             String selectedRoom = (String) roomComboBox.getSelectedItem();
-            List<ApplianceUsage> filteredAppliances = filterAppliancesByRoom(household, selectedRoom);
+            List<ApplianceUsage> filteredAppliances = HouseholdService.filterAppliancesByRoom(household, selectedRoom);
             displaySortedAppliances(statisticsFrame, filteredAppliances);
         });
 
@@ -50,7 +50,7 @@ public class StatisticsPage {
                 sortedAppliances = HouseholdService.sortByCarbonFootprint();
             } else {
                 // Filter appliances by the selected room and then sort
-                List<ApplianceUsage> filteredAppliances = filterAppliancesByRoom(household, selectedRoom);
+                List<ApplianceUsage> filteredAppliances = HouseholdService.filterAppliancesByRoom(household, selectedRoom);
                 sortedAppliances = filteredAppliances.stream()
                         .sorted(ApplianceUsage.COMPARE_BY_CARBON_FOOTPRINT)
                         .collect(Collectors.toList());
@@ -70,9 +70,7 @@ public class StatisticsPage {
     }
 
     private static void populateRoomComboBox(Household household, JComboBox<String> roomComboBox) {
-        Set<String> roomTypes = household.getAppliances().stream()
-                .map(applianceUsage -> applianceUsage.getRoom().getCaption())
-                .collect(Collectors.toSet());
+        Set<String> roomTypes = HouseholdService.getSelectedRoom(household);
 
         roomComboBox.addItem("All rooms");
         for (String roomType : roomTypes) {
@@ -80,10 +78,6 @@ public class StatisticsPage {
         }
     }
 
-    private static List<ApplianceUsage> filterAppliancesByRoom(Household household, String roomType) {
-        return household.getAppliances().stream()
-                .filter(applianceUsage -> applianceUsage.getRoom().getCaption().equals(roomType)).collect(Collectors.toList());
-    }
 
     private static void displaySortedAppliances(JFrame statisticsFrame, List<ApplianceUsage> sortedAppliances) {
         displayPanel.removeAll();
