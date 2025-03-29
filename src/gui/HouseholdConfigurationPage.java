@@ -26,6 +26,7 @@ public class HouseholdConfigurationPage extends PageTemplate {
     public HouseholdConfigurationPage() {
         super("Household Configuration");
         this.appliancePanels = new ArrayList<>();
+        buildUI();
     }
 
     @Override
@@ -64,7 +65,7 @@ public class HouseholdConfigurationPage extends PageTemplate {
         // Action buttons
         JPanel buttonActionsPanel = createPanel(new FlowLayout(FlowLayout.CENTER));
         createActionButton("Calculate Carbon Footprint", () -> handleButtonClick(this::openCFWindow), buttonActionsPanel, null);
-        createActionButton("Show Statistics", () -> handleButtonClick(this::openStatisticsWindow), buttonActionsPanel, null);
+        createActionButton("Show Statistics", () -> handleButtonClick(StatisticsPage::new), buttonActionsPanel, null);
         return buttonActionsPanel;
     }
 
@@ -108,11 +109,6 @@ public class HouseholdConfigurationPage extends PageTemplate {
         if (household != null) {
             nextStep.accept(household);
         }
-    }
-
-    private void openStatisticsWindow(Household household){
-        StatisticsPage.openStatisticsWindow(household);
-//        new StatisticsPage2(household);
     }
 
     private void openCFWindow(Household household) {

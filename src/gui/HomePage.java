@@ -10,7 +10,7 @@ public class HomePage extends PageTemplate {
 
     public HomePage() {
         super("Home");
-        validateDatabase();
+        buildUI();
     }
 
     @Override
@@ -27,18 +27,20 @@ public class HomePage extends PageTemplate {
     protected JPanel createContentPanel() {
         JPanel buttonContainer = createPanel(new FlowLayout(FlowLayout.CENTER));
 
-        createActionButton("Update Database", ApplianceDatabasePage::new, buttonContainer, null);
+        createActionButton("Update Database", () -> handleButtonClick(ApplianceDatabasePage::new), buttonContainer, null);
         createVerticalSpacing(buttonContainer);
-        createActionButton("Configure Household", HouseholdConfigurationPage::new, buttonContainer, null);
+        createActionButton("Configure Household", () -> handleButtonClick(HouseholdConfigurationPage::new), buttonContainer, null);
 
         return buttonContainer;
     }
 
-    private void validateDatabase() {
+    private void handleButtonClick(Runnable nextStep) {
         List<String> invalidEntries = DatabaseService.validateDatabase();
         if (!invalidEntries.isEmpty()) {
             String message = "The following entries are invalid:\n" + String.join("\n", invalidEntries);
             JOptionPane.showMessageDialog(frame, message, "Invalid Database Entries", JOptionPane.ERROR_MESSAGE);
+        } else {
+            nextStep.run();
         }
     }
 

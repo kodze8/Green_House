@@ -7,6 +7,7 @@ public class ApplianceDatabasePage extends PageTemplate {
 
     public ApplianceDatabasePage() {
         super("Update Appliance Database");
+        buildUI();
     }
 
     @Override

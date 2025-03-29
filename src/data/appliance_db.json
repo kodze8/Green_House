@@ -568,5 +568,11 @@
         "power_consumption_kwh": 0.15,
         "embodied_emissions_kgCO2e": 120,
         "type": "COMPUTER"
+    },
+    {
+        "name": "ucdishbdc",
+        "power_consumption_kwh": 120,
+        "embodied_emissions_kgCO2e": 2,
+        "type": "HEATER"
     }
 ]

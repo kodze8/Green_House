@@ -11,7 +11,9 @@ public abstract class PageTemplate {
 
     protected PageTemplate(String title) {
         frame = createFrame(title);
+    }
 
+    protected void buildUI() {
 
         JPanel headerPanel = createHeaderPanel();
         JPanel contentPanel = createContentPanel(); // Abstract method for custom content

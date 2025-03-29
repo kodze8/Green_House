@@ -67,7 +67,7 @@ public class ApplianceUsageHandler implements Handler<List<ApplianceUsage>> {
                 Errors.showError(frame, Errors.APPLIANCE_ROOM_ERROR);
                 return false;
             }
-            if (Objects.equals(panel.startTimeBox.getSelectedItem(), panel.endTimeBox.getSelectedItem())) {
+            if (panel.endTimeBox.getSelectedIndex() < panel.startTimeBox.getSelectedIndex()) {
                 Errors.showError(frame, Errors.APPLIANCE_TIME_ERROR);
                 return false;
             }
@@ -75,4 +75,3 @@ public class ApplianceUsageHandler implements Handler<List<ApplianceUsage>> {
         return true;
     }
 }
-//applianceUsage handler
