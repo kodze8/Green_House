@@ -19,7 +19,7 @@ public class Household {
     private Country country;
     private EnergyLabel energyLabel;
     private List<ApplianceUsage> appliances;
-    private static final int FLIGHT = 134; //Estimated carbon footprint of a flight from Amsterdam to Paris for 1 person
+    private static final int FLIGHT = 900; //Estimated carbon footprint of a flight from Amsterdam to New-York for 1 person
 
     private Household(Country country, EnergyLabel energyLabel) {
         resetAttributes(country, energyLabel);

@@ -43,7 +43,7 @@ public class StatisticsPage extends PageTemplate {
 
         // Flight conversion section
         JPanel flightConversionPanel = createPanel(new BorderLayout());
-        JLabel flightConversionLabel = new JLabel("Your yearly carbon footprint is equal to " + household.flightConversion(household.getCarbonFootPrint()) +" flights from Amsterdam to Paris!", SwingConstants.CENTER);
+        JLabel flightConversionLabel = new JLabel("Your yearly carbon footprint is equal to " + household.flightConversion(household.getCarbonFootPrint()) +" flights from Amsterdam to New-York!", SwingConstants.CENTER);
         flightConversionPanel.add(flightConversionLabel, BorderLayout.CENTER);
 
         // Household fields Section
