@@ -44,8 +44,8 @@ public class ApplianceUsageHandler implements Handler<List<ApplianceUsage>> {
             String name = Objects.requireNonNull(panel.nameBox.getSelectedItem()).toString();
             Room room = Room.getEnumByCaption(Objects.requireNonNull(panel.roomBox.getSelectedItem()).toString());
             boolean alwaysOn = panel.alwaysOn.isSelected();
-            int startTime = alwaysOn ? 0 : AppliancePanel.TIME_MAP.get(panel.startTimeBox.getSelectedItem());
-            int endTime = alwaysOn ? 23 : AppliancePanel.TIME_MAP.get(panel.endTimeBox.getSelectedItem());
+            int startTime = panel.startTimeBox.getSelectedIndex();
+            int endTime = panel.endTimeBox.getSelectedIndex();
             applianceUsages.add(new ApplianceUsage(name, room, country, alwaysOn, startTime, endTime)); // Pass the country here
         }
         if (applianceUsages.isEmpty()) Errors.showError(frame, Errors.APPLIANCE_EMPTY);

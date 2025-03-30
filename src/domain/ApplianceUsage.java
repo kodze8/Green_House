@@ -36,14 +36,12 @@ public class ApplianceUsage {
     private final List<Integer> carbonIntensity;
     private final Room room;
     private final int carbonFootprint;
-    private final boolean alwaysOn;
     private static final double GRAMS_TO_KG_CONVERSION_FACTOR = 1000.0;
 
 
     public ApplianceUsage(String name, Room room, Country country, boolean alwaysOn, int start, int end) {
         this.appliance = ApplianceHandler.retrieveAppliance(name);
         this.room = room;
-        this.alwaysOn = alwaysOn;
         this.startTime = alwaysOn ? 0 : start;
         this.endTime = alwaysOn ? 23 : end;
         this.carbonIntensity = CarbonIntensityService.getCarbonIntensity(country.getCaption(), this.startTime, this.endTime);
@@ -73,9 +71,7 @@ public class ApplianceUsage {
     public int getEndTime(){
         return this.endTime;
     }
-    public int getTimeRange(){
-        return this.endTime-this.startTime+1;
-    }
+    public int getTimeRange(){return this.endTime-this.startTime+1;}
 
     public int getCarbonFootprint(){
         return this.carbonFootprint;

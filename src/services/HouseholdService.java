@@ -64,10 +64,6 @@ public class HouseholdService {
     }
 
     public static Set<String> getSelectedRooms(Household household) {
-        if (household == null) {
-            System.out.println("Household data is missing.");
-        }
-        assert household != null;
         return household.getAppliances().stream()
                 .map(applianceUsage -> applianceUsage.getRoom().getCaption())
                 .collect(Collectors.toSet());
